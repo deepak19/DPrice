@@ -161,7 +161,7 @@ header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
 }
 
 .badge-neighbor {
-    background-color: var(--navy-primary);
+    background-color: #086800;
     color: #FFFFFF;
     border: 1px solid var(--navy-primary);
 }

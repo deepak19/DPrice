@@ -117,10 +117,10 @@ function calculateOmnichannelPricing() {
 
     // 0. Update User Auth State Header Badge Layout
     if (userAuth === 'neighbor') {
-        sessionIndicator.innerText = "👤 Active Session: Logged-In Neighbor (Loyalty Benefits Active)";
+        sessionIndicator.innerText = "👤 Logged-In Neighbor";
         sessionIndicator.className = "session-badge badge-neighbor";
     } else {
-        sessionIndicator.innerText = "👤 Active Session: Anonymous Guest (Standard Public View)";
+        sessionIndicator.innerText = "👤 Anonymous Guest";
         sessionIndicator.className = "session-badge badge-guest";
     }
 
