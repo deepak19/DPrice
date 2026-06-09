@@ -14,6 +14,7 @@ const tilePriceContainer = document.getElementById('tilePriceContainer');
 const tileActionButton = document.getElementById('tileActionButton');
 
 const sessionIndicator = document.getElementById('sessionIndicator');
+const tileComplianceLinkContainer = document.getElementById('tileComplianceLinkContainer');
 const conditionalStoreTile = document.getElementById('conditionalStoreTile');
 const storeFinalPrice = document.getElementById('storeFinalPrice');
 const storeOnlinePrice = document.getElementById('storeOnlinePrice');
@@ -26,7 +27,7 @@ const cartFinal = document.getElementById('cartFinal');
 const logPath = document.getElementById('logPath');
 const logInStore = document.getElementById('logInStore');
 const logEcomm = document.getElementById('logEcomm');
-const logMask = document.getElementById('logMask');
+
 
 function calculateOmnichannelPricing() {
     // Graceful zero-fallbacks for empty user values
@@ -45,11 +46,11 @@ function calculateOmnichannelPricing() {
     let guestPrice = 0;
     let neighborPrice = 0;
     let scenarioId = "Undetermined";
-    let tileDisplay = "Visible";
+    let isBelowMapTrigger = false;
 
     // --- Pricing Engine Matrix Core Logic ---
     if (!hasPPC) {
-        // Business Rule Exception Patch: Category 2 (No PPC) defaults Register Price directly to List
+        // Business Rule Exception Patch: Category 2 (No PPC) defaults Register Price directly to List [cite: 142]
         inStorePrice = list;
 
         if (imap > 0 && map === 0 && imap > list) {
@@ -100,71 +101,80 @@ function calculateOmnichannelPricing() {
     // Determine current processing pricing structure path from input state selectors
     const ecommPrice = (userAuth === 'neighbor') ? neighborPrice : guestPrice;
 
-    // Run MAP Policy Hiding Rules Engine Evaluation
+    // Back-end flag audit calculation for when a MAP exception/treatment rule context applies [cite: 36]
     if (inStorePrice < map || ecommPrice < map) {
         if (scenarioId !== "5" && scenarioId !== "2a" && scenarioId !== "3a" && scenarioId !== "4") {
-            tileDisplay = "Hidden";
+            isBelowMapTrigger = true;
         }
-    }
-
-    // Master Exception Override Rule Check
-    if (brandException) {
-        tileDisplay = "Visible";
     }
 
     // --- DOM Template Content Injection Sequence ---
-    displayWrapper.className = "display-outputs " + (tileDisplay === "Visible" ? "mode-visible" : "mode-hidden");
+    // Enforced visibility criteria constraint update: Tile numerical prices are ALWAYS visible 
+    displayWrapper.className = "display-outputs mode-visible";
 
-    // 0. Update User Auth State Header Badge Layout
+    // 0. Update User Auth State Header Badge Layout [cite: 286, 287]
     if (userAuth === 'neighbor') {
-        sessionIndicator.innerText = "👤 Logged-In Neighbor";
+        sessionIndicator.innerText = "👤 Logged-In";
         sessionIndicator.className = "session-badge badge-neighbor";
     } else {
-        sessionIndicator.innerText = "👤 Anonymous Guest";
+        sessionIndicator.innerText = "👤 Anonymous";
         sessionIndicator.className = "session-badge badge-guest";
     }
 
-    // 1. Render Product Tile Layout elements
-    if (tileDisplay === "Visible") {
-        if (ecommPrice < list) {
-            tilePriceContainer.innerHTML = `
-                <div class="strike-price">Reg: $${list.toFixed(2)}</div>
-                <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
-            `;
-        } else {
-            tilePriceContainer.innerHTML = `
-                <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
-            `;
-        }
-        conditionalStoreTile.style.display = "none";
+    // 1. Render Product Tile Layout elements with dynamic strikethrough logic rules mapping 
+    if (neighborPrice < guestPrice) {
+        // Custom strikethrough criteria implementation: Crossed out Guest Price next to highlighted Neighbor Price 
+        tilePriceContainer.innerHTML = `
+            <div class="strike-price">$${guestPrice.toFixed(2)}</div>
+            <div class="main-rendered-price" style="color: var(--psp-green);">$${neighborPrice.toFixed(2)}</div>
+        `;
+    } else if (ecommPrice < list) {
+        tilePriceContainer.innerHTML = `
+            <div class="strike-price">Reg: $${list.toFixed(2)}</div>
+            <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
+        `;
     } else {
         tilePriceContainer.innerHTML = `
-            <div class="view-store-link-wrapper">
+            <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
+        `;
+    }
+
+    // 2. Coordinated Compliance Link Injection & Conditional Tag Visibility Triggering 
+    if (isBelowMapTrigger && !brandException) {
+        // Inject compliance text link directly inside its target placeholder ABOVE the button
+        tileComplianceLinkContainer.innerHTML = `
+            <div class="view-store-link-wrapper" style="font-weight: 600;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;"><path d="M3 3h18v4H3zM3 7l1 12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l1-12M10 12h4"/></svg>
-                <span class="underline-text">View in-store price</span> ➔
+                <span class="underline-text" style="margin-bottom: 5px;">View in-store price</span> ➔
             </div>
         `;
         conditionalStoreTile.style.display = "flex";
+    } else {
+        tileComplianceLinkContainer.innerHTML = `
+            <div class="view-store-link-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;"><path d="M3 3h18v4H3zM3 7l1 12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l1-12M10 12h4"/></svg>
+                <span style="font-weight: 600;">$${inStorePrice.toFixed(2)}</span><span> - if purchased in store</span>
+            </div>
+        `;
+        conditionalStoreTile.style.display = "none";
     }
 
-    // 2. Render In-Store Card Data Channels
+    // 3. Render In-Store Card Data Channels
     storeFinalPrice.innerText = `$${inStorePrice.toFixed(2)}`;
     storeOnlinePrice.innerText = `$${ecommPrice.toFixed(2)}`;
     storeFinalPrice2.innerText = `$${inStorePrice.toFixed(2)}`;
 
-    // 3. Compute Shopping Cart Metrics from Custom Prompt Math Layer Specifications
+    // 4. Compute Shopping Cart Metrics from Custom Prompt Math Layer Specifications [cite: 276, 277, 278]
     cartSubtotal.innerText = `$${guestPrice.toFixed(2)}`;
     const calculationDelta = guestPrice - ecommPrice;
     cartDiscount.innerText = `-$${calculationDelta.toFixed(2)}`;
     cartFinal.innerText = `$${ecommPrice.toFixed(2)}`;
 
-    // 4. Update the diagnostics telemetry control console log window stream
-    logPath.innerText = "Scenario Matrix Reference #" + scenarioId;
+    // 5. Update the diagnostics telemetry control console log window stream
+    logPath.innerText = scenarioId;
     logInStore.innerText = "$" + inStorePrice.toFixed(2);
     logEcomm.innerText = "$" + ecommPrice.toFixed(2);
-    logMask.innerText = tileDisplay === "Visible" 
-        ? "None (Fully Advertised on Product Tile Grid)" 
-        : (brandException ? "Overridden via Active Brand Exception Configuration" : "Enforced Compliance Hiding Active (Cart Mask)");
+
 }
 
 // Map Calculator Execution Hooks to Inputs
