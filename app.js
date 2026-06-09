@@ -130,12 +130,10 @@ function calculateOmnichannelPricing() {
             tilePriceContainer.innerHTML = `
                 <div class="strike-price">Reg: $${list.toFixed(2)}</div>
                 <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
-                <div class="price-tag-subtext">${userAuth === 'neighbor' ? 'Neighbor Benefit Applied' : 'Online Pricing'}</div>
             `;
         } else {
             tilePriceContainer.innerHTML = `
                 <div class="main-rendered-price">$${ecommPrice.toFixed(2)}</div>
-                <div class="price-tag-subtext">Standard Online Value</div>
             `;
         }
         conditionalStoreTile.style.display = "none";
