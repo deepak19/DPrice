@@ -1,6 +1,6 @@
 /**
  * Omnichannel Pricing Logic Engine Module
- * Multi-Variable Rule Matrix Implementation
+ * Multi-Variable Rule Matrix Implementation - June 2026 Compliant
  */
 
 // Bind DOM Target Nodes
@@ -28,7 +28,6 @@ const logPath = document.getElementById('logPath');
 const logInStore = document.getElementById('logInStore');
 const logEcomm = document.getElementById('logEcomm');
 
-
 function calculateOmnichannelPricing() {
     // Graceful zero-fallbacks for empty user values
     const list = parseFloat(listField.value) || 0;
@@ -50,7 +49,7 @@ function calculateOmnichannelPricing() {
 
     // --- Pricing Engine Matrix Core Logic ---
     if (!hasPPC) {
-        // Business Rule Exception Patch: Category 2 (No PPC) defaults Register Price directly to List [cite: 142]
+        // Business Rule Exception Patch: Category 2 (No PPC) defaults Register Price directly to List [cite: 38, 156]
         inStorePrice = list;
 
         if (imap > 0 && map === 0 && imap > list) {
@@ -101,18 +100,18 @@ function calculateOmnichannelPricing() {
     // Determine current processing pricing structure path from input state selectors
     const ecommPrice = (userAuth === 'neighbor') ? neighborPrice : guestPrice;
 
-    // Back-end flag audit calculation for when a MAP exception/treatment rule context applies [cite: 36]
-    if (inStorePrice < map || ecommPrice < map) {
-        if (scenarioId !== "5" && scenarioId !== "2a" && scenarioId !== "3a" && scenarioId !== "4") {
-            isBelowMapTrigger = true;
-        }
+    // June 2026 Compliance Update: Scenarios 4 & 5 display unconstrained. 
+    // All other conditions require dynamic compliance mapping (Cart Only / View In-Store Price CTA).
+    if (scenarioId !== "4" && scenarioId !== "5") {
+        isBelowMapTrigger = true;
+    } else {
+        isBelowMapTrigger = false;
     }
 
     // --- DOM Template Content Injection Sequence ---
-    // Enforced visibility criteria constraint update: Tile numerical prices are ALWAYS visible 
     displayWrapper.className = "display-outputs mode-visible";
 
-    // 0. Update User Auth State Header Badge Layout [cite: 286, 287]
+    // 0. Update User Auth State Header Badge Layout [cite: 298]
     if (userAuth === 'neighbor') {
         sessionIndicator.innerText = "👤 Logged-In";
         sessionIndicator.className = "session-badge badge-neighbor";
@@ -121,9 +120,8 @@ function calculateOmnichannelPricing() {
         sessionIndicator.className = "session-badge badge-guest";
     }
 
-    // 1. Render Product Tile Layout elements with dynamic strikethrough logic rules mapping 
+    // 1. Render Product Tile Layout elements with dynamic strikethrough logic rules mapping [cite: 315]
     if (neighborPrice < guestPrice) {
-        // Custom strikethrough criteria implementation: Crossed out Guest Price next to highlighted Neighbor Price 
         tilePriceContainer.innerHTML = `
             <div class="strike-price">$${guestPrice.toFixed(2)}</div>
             <div class="main-rendered-price" style="color: var(--psp-green);">$${neighborPrice.toFixed(2)}</div>
@@ -139,9 +137,8 @@ function calculateOmnichannelPricing() {
         `;
     }
 
-    // 2. Coordinated Compliance Link Injection & Conditional Tag Visibility Triggering 
+    // 2. Coordinated Compliance Link Injection & Conditional Tag Visibility Triggering [cite: 268, 283]
     if (isBelowMapTrigger && !brandException) {
-        // Inject compliance text link directly inside its target placeholder ABOVE the button
         tileComplianceLinkContainer.innerHTML = `
             <div class="view-store-link-wrapper" style="font-weight: 600;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;"><path d="M3 3h18v4H3zM3 7l1 12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l1-12M10 12h4"/></svg>
@@ -159,12 +156,12 @@ function calculateOmnichannelPricing() {
         conditionalStoreTile.style.display = "none";
     }
 
-    // 3. Render In-Store Card Data Channels
+    // 3. Render In-Store Card Data Channels [cite: 278]
     storeFinalPrice.innerText = `$${inStorePrice.toFixed(2)}`;
     storeOnlinePrice.innerText = `$${ecommPrice.toFixed(2)}`;
     storeFinalPrice2.innerText = `$${inStorePrice.toFixed(2)}`;
 
-    // 4. Compute Shopping Cart Metrics from Custom Prompt Math Layer Specifications [cite: 276, 277, 278]
+    // 4. Compute Shopping Cart Metrics from Custom Prompt Math Layer Specifications [cite: 290, 291, 292]
     cartSubtotal.innerText = `$${guestPrice.toFixed(2)}`;
     const calculationDelta = guestPrice - ecommPrice;
     cartDiscount.innerText = `-$${calculationDelta.toFixed(2)}`;
@@ -174,7 +171,6 @@ function calculateOmnichannelPricing() {
     logPath.innerText = scenarioId;
     logInStore.innerText = "$" + inStorePrice.toFixed(2);
     logEcomm.innerText = "$" + ecommPrice.toFixed(2);
-
 }
 
 // Map Calculator Execution Hooks to Inputs
