@@ -1,0 +1,228 @@
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 1rem 0.5rem;
+    line-height: 1.4;
+    font-size: 0.875rem;
+}
+
+.container {
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+header {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+header p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.space-y > div {
+    margin-bottom: 0.75rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card h2 {
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--bg);
+    color: #0f172a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sticky {
+    position: sticky;
+    top: 1rem;
+}
+
+.section-tag {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.tag-product { background: #fee2e2; color: #991b1b; }
+.tag-brand { background: #dbeafe; color: #1e40af; }
+.tag-global { background: #fef9c3; color: #854d0e; }
+
+.form-group {
+    margin-bottom: 0.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    color: #334155;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.45rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    background: var(--bg);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f1f5f9;
+    padding: 0.45rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.checkbox-group input {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    cursor: pointer;
+}
+
+.eligibility-notice {
+    background: #fff2f7;
+    border: 1px solid #dd0020;
+    color: #dd0020;
+    padding: 0.4rem;
+    border-radius: 4px;
+    font-size: 0.775rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    text-align: center;
+}
+
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.path-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+    letter-spacing: 0.02em;
+}
+
+.result-badge {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-title {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.result-val {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 0.1rem;
+}
+
+.source-indicator {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    color: white;
+}
+
+.src-P { background: #dc2626; }
+.src-B { background: #2563eb; }
+.src-G { background: #ca8a04; }
+.src-None { background: #64748b; }
+
+.all-or-nothing-notice {
+    background: #fff7ed;
+    border: 1px solid #ffedd5;
+    color: #c2410c;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    display: none;
+}
