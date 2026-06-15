@@ -24,25 +24,31 @@ body {
 }
 
 .container {
-    max-width: 950px;
+    max-width: 1350px;
     margin: 0 auto;
 }
 
 header {
-    margin-bottom: 1rem;
+	display: flex;
+    background-color: #000;
+    color: white;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 25px;
     text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+header .div-10 {
+  flex-basis: 10%;
+  flex-shrink: 0; 
 }
 
-header h1 {
-    font-size: 1.6rem;
-    color: #0f172a;
-    margin-bottom: 0.25rem;
+header .div-80 {
+  flex-basis: 80%;
+  flex-shrink: 0;
 }
-
-header p {
-    font-size: 0.85rem;
-    color: var(--text-light);
-}
+header h1 { margin: 0; font-size: 24px; }
+header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
 
 .grid {
     display: grid;

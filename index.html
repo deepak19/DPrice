@@ -1,41 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
+   <head>
+      <meta charset="UTF-8">
+      <title>Home Page</title>
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         text-align: center;
+         margin-top: 100px;
+         }
+         .btn {font-size: 1.2rem;
+         display: inline-block;
+         padding: 12px 12px;
+         margin: 10px;
+         background-color: #168b14;
+         color: white;
+         text-decoration: none;
+         border-radius: 5px;
+         }
+         .btn:hover {
+         background-color: #256128;
+         }
+		 .container {
+    max-width: 1350px;
+    margin: 0 auto;
+}
+		 header {
+	display: flex;
+    background-color: #000;
+    color: white;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+header .div-10 {
+  flex-basis: 10%;
+  flex-shrink: 0; 
+}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            margin: 10px;
-            background-color: #0078d4;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .btn:hover {
-            background-color: #005ea6;
-        }
-    </style>
-</head>
-<body>
-
-    <h2>Select a Page</h2>
-
-    <a href="differentiatedprice.html" class="btn">
-        Differentiated Price
-    </a>
-
-    <a href="autoshipdiscount.html" class="btn">
-        Autoship Discount
-    </a>
-
-</body>
+header .div-80 {
+  flex-basis: 80%;
+  flex-shrink: 0;
+}
+header h1 { margin: 0; font-size: 24px; }
+header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <header>
+            <a class="div-10" href='index.html'><img src='https://i.postimg.cc/RNdzbW73/homeong.png' border='0' alt='home' width= '54'></a>
+            <div  class="div-80">
+               <h1>Select a Page</h1>
+            </div>
+         </header>
+         <a href="differentiatedprice.html" class="btn">
+         Differentiated Price
+         </a>
+         <a href="autoshipdiscount.html" class="btn">
+         Autoship Discount
+         </a>
+      </div>
+   </body>
 </html>
