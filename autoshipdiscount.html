@@ -1,121 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autoship Engine Rule</title>
-    <link rel="stylesheet" href="autoshipdiscount.css">
-</head>
-<body>
-
-<div class="container">
-    <header>
-		<a class="div-10" href='index.html'><img src='https://i.postimg.cc/RNdzbW73/homeong.png' border='0' alt='home' width= '54'></a>
-	<div  class="div-80">
-        <h1>Autoship Engine Rule Showcase</h1>
-        <p>Interactive playground visualizing configuration priority cascades, brand overrides, and metrics variation.</p>
-	</div>
-    </header>
-
-    <div class="grid">
-        <div class="space-y">
-            <div class="card">
-                <h2>Product Layer (product.xp) <span class="section-tag tag-product">Priority 1</span></h2>
-                <div class="form-group">
-                    <label for="prodFtadPercent">FTAD Percent (%)</label>
-                    <input type="number" id="prodFtadPercent" class="form-control" min="0" max="100">
-                </div>
-                <div class="form-group">
-                    <label for="prodRadPercent">Recurring Autoship %</label>
-                    <input type="number" id="prodRadPercent" class="form-control" min="0" max="100">
-                </div>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Autoship Engine Rule</title>
+      <link rel="stylesheet" href="autoshipdiscount.css">
+   </head>
+   <body>
+      <div class="container">
+         <header>
+            <a class="div-10" href='index.html'><img src='https://i.postimg.cc/RNdzbW73/homeong.png' border='0' alt='home' width= '54'></a>
+            <div  class="div-80">
+               <h1>Autoship Engine Rule Showcase</h1>
+               <p>Interactive playground visualizing configuration priority cascades, brand overrides, and metrics variation.</p>
             </div>
-
-            <div class="card">
-                <h2>Brand Layer (Sitecore)<span class="section-tag tag-brand">Priority 2</span></h2>
-                <div class="form-group">
-                    <label for="brandFtadPercent">Brand FTAD Percent (%)</label>
-                    <input type="number" id="brandFtadPercent" class="form-control"  min="0" max="100">
-                </div>
-                <div class="form-group">
-                    <label for="brandFtadLimit">Brand Max Limit ($)</label>
-                    <input type="number" id="brandFtadLimit" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="brandRecPercent">Brand Recurring Percent (%)</label>
-                    <input type="number" id="brandRecPercent" class="form-control" min="0" max="100">
-                </div>
-                
-                <div class="checkbox-group">
-                    <input type="checkbox" id="enforceBrandOverride">
-                    <label for="enforceBrandOverride">EnforceBrandOverride</label>
-                </div>
-																		   
-																																																															  
-					  
+         </header>
+         <div class="grid">
+            <div class="space-y">
+               <div class="card">
+                  <h2>Product Layer (product.xp) <span class="section-tag tag-product">Priority 1</span></h2>
+                  <div class="form-group">
+                     <label for="prodFtadPercent">FTAD Percent (%)</label>
+                     <input type="number" id="prodFtadPercent" class="form-control" min="0" max="100">
+                  </div>
+                  <div class="form-group">
+                     <label for="prodRadPercent">Recurring Autoship %</label>
+                     <input type="number" id="prodRadPercent" class="form-control" min="0" max="100">
+                  </div>
+               </div>
+               <div class="card">
+                  <h2>Brand Layer (Sitecore)<span class="section-tag tag-brand">Priority 2</span></h2>
+                  <div class="form-group">
+                     <label for="brandFtadPercent">Brand FTAD Percent (%)</label>
+                     <input type="number" id="brandFtadPercent" class="form-control"  min="0" max="100">
+                  </div>
+                  <div class="form-group">
+                     <label for="brandFtadLimit">Brand Max Limit ($)</label>
+                     <input type="number" id="brandFtadLimit" class="form-control">
+                  </div>
+                  <div class="form-group">
+                     <label for="brandRecPercent">Brand Recurring Percent (%)</label>
+                     <input type="number" id="brandRecPercent" class="form-control" min="0" max="100">
+                  </div>
+                  <div class="checkbox-group">
+                     <input type="checkbox" id="enforceBrandOverride">
+                     <label for="enforceBrandOverride">EnforceBrandOverride</label>
+					 <span style="color: #eb7070; font-style: italic;">EnforceBrandOverride: A Sitecore checkbox field will enable authors to configure FTAD enforcement at the brand level rather than the default SKU level.</span>
+                  </div>
+               </div>
+               <div class="card">
+                  <h2>System Baseline (Global Defaults) <span class="section-tag tag-global">Priority 3</span></h2>
+                  <div class="form-group">
+                     <label for="globalFtadPercent">Default FTAD Percent (%)</label>
+                     <input type="number" id="globalFtadPercent" class="form-control" value="35">
+                  </div>
+                  <div class="form-group">
+                     <label for="globalFtadLimit">Default Max Limit ($)</label>
+                     <input type="number" id="globalFtadLimit" class="form-control" value="25">
+                  </div>
+                  <div class="form-group">
+                     <label for="globalRecPercent">Default Recurring Percent (%)</label>
+                     <input type="number" id="globalRecPercent" class="form-control" value="5">
+                  </div>
+               </div>
             </div>
-
-            <div class="card">
-                <h2>System Baseline (Global Defaults) <span class="section-tag tag-global">Priority 3</span></h2>
-                <div class="form-group">
-                    <label for="globalFtadPercent">Default FTAD Percent (%)</label>
-                    <input type="number" id="globalFtadPercent" class="form-control" value="35">
-                </div>
-                <div class="form-group">
-                    <label for="globalFtadLimit">Default Max Limit ($)</label>
-                    <input type="number" id="globalFtadLimit" class="form-control" value="25">
-                </div>
-                <div class="form-group">
-                    <label for="globalRecPercent">Default Recurring Percent (%)</label>
-                    <input type="number" id="globalRecPercent" class="form-control" value="5">
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <div class="card sticky">
-                <h2>Resolved Output Summary</h2>
-                
-                <div id="eligibilityNotice" class="eligibility-notice"></div>
-                
-                <div class="results-container">
-                    <div>
+            <div>
+               <div class="card sticky">
+                  <h2>Resolved Output Summary</h2>
+                  <div id="eligibilityNotice" class="eligibility-notice"></div>
+                  <div class="results-container">
+                     <div>
                         <h3 class="path-title">🛒 Upfront Checkout Path (FTAD)</h3>
-                        
                         <div class="result-badge">
-                            <div class="result-meta">
-                                <span class="result-title">Resolved FTAD Percent</span>
-                                <span class="result-val" id="outFtadPercent">0%</span>
-                            </div>
-                            <span class="source-indicator" id="srcFtadPercent">None</span>
+                           <div class="result-meta">
+                              <span class="result-title">Resolved FTAD Percent</span>
+                              <span class="result-val" id="outFtadPercent">0%</span>
+                           </div>
+                           <span class="source-indicator" id="srcFtadPercent">None</span>
                         </div>
-
                         <div class="result-badge" style="margin-top: 0.4rem;">
-                            <div class="result-meta">
-                                <span class="result-title">Resolved Max Limit</span>
-                                <span class="result-val" id="outFtadLimit">$0.00</span>
-                            </div>
-                            <span class="source-indicator" id="srcFtadLimit">None</span>
+                           <div class="result-meta">
+                              <span class="result-title">Resolved Max Limit</span>
+                              <span class="result-val" id="outFtadLimit">$0.00</span>
+                           </div>
+                           <span class="source-indicator" id="srcFtadLimit">None</span>
                         </div>
-                    </div>
-<hr>
-                    <div style="margin-top: 0.75rem;">
+                     </div>
+                     <hr>
+                     <div style="margin-top: 0.75rem;">
                         <h3 class="path-title">🔄 Recurring Order</h3>
-                        
                         <div class="result-badge">
-                            <div class="result-meta">
-                                <span class="result-title">Resolved RAD Percent</span>
-                                <span class="result-val" id="outRadPercent">0%</span>
-                            </div>
-                            <span class="source-indicator" id="srcRadPercent">None</span>
+                           <div class="result-meta">
+                              <span class="result-title">Resolved RAD Percent</span>
+                              <span class="result-val" id="outRadPercent">0%</span>
+                           </div>
+                           <span class="source-indicator" id="srcRadPercent">None</span>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<script src="autoshipdiscount.js"></script>
-</body>
+         </div>
+         <div class="questions">
+		 <p>Questions: </P>
+            <ul>
+               <li>A product belonging to Brand B previously availed FTAD when NO BrandConfig existed. Later, a BrandConfig was added with EnforceBrandOverride = true. For a new cart, will the product still receive FTAD under the new BrandConfig settings?</li>
+               <li>For Brand B, a BrandConfig with EnforceBrandOverride = true was initially present but was later removed. In this scenario, do we start fresh for each SKU for FTAD?</li>
+               <li>If a product does not have FTAD percentage values defined in its XP and there is no BrandConfig available, will the product receive the default FTAD of 35%, applied once per SKU?</li>
+               <li>When EnforceBrandOverride = true, which FTAD percentage takes precedence? Our understanding is:Product > Brand > Default. Please confirm if this is correct.</li>
+               <li>If multiple products from the same brand are present in the cart, do we proportionate the discount based on the MaxLimit, regardless of the EnforceBrandOverride setting?</li>
+               <li>Where will this volume of FTAD-related tracking data be stored? (Question for the HZTL team.)</li>
+            </ul>
+         </div>
+      </div>
+      <script src="autoshipdiscount.js"></script>
+   </body>
 </html>

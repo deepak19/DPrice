@@ -84,6 +84,9 @@ header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
     justify-content: space-between;
     align-items: center;
 }
+.card .checkbox-group{
+	flex-wrap: wrap;
+}
 
 .sticky {
     position: sticky;
@@ -231,4 +234,13 @@ header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
     font-size: 0.75rem;
     margin-top: 0.5rem;
     display: none;
+}
+.questions {
+    background: #ffe5e5;
+    padding: 20px 60px;
+}
+.questions p
+{
+	font-size: 1rem;
+    font-weight: 700;
 }
