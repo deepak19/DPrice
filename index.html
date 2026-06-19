@@ -1,67 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <title>Home Page</title>
-      <style>
-         body {
-         font-family: Arial, sans-serif;
-         text-align: center;
-         margin-top: 100px;
-         }
-         .btn {font-size: 1.2rem;
-         display: inline-block;
-         padding: 12px 12px;
-         margin: 10px;
-         background-color: #168b14;
-         color: white;
-         text-decoration: none;
-         border-radius: 5px;
-         }
-         .btn:hover {
-         background-color: #256128;
-         }
-		 .container {
-    max-width: 1350px;
-    margin: 0 auto;
-}
-		 header {
-	display: flex;
-    background-color: #000;
-    color: white;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-header .div-10 {
-  flex-basis: 10%;
-  flex-shrink: 0; 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Page</title>
+
+<style>
+:root {
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-header .div-80 {
-  flex-basis: 80%;
-  flex-shrink: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-header h1 { margin: 0; font-size: 24px; }
-header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
-      </style>
-   </head>
-   <body>
-      <div class="container">
-         <header>
-            <a class="div-10" href='index.html'><img src='https://i.postimg.cc/RNdzbW73/homeong.png' border='0' alt='home' width= '54'></a>
-            <div  class="div-80">
-               <h1>Select a Page</h1>
-            </div>
-         </header>
-         <a href="differentiatedprice.html" class="btn">
-         Differentiated Price
-         </a>
-         <a href="autoshipdiscount.html" class="btn">
-         Autoship Discount
-         </a>
-      </div>
-   </body>
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f4f7fb, #eef4ff);
+    min-height: 100vh;
+    color: var(--text);
+    padding: 30px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    background: #111827;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+}
+
+.logo {
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.logo img {
+    width: 48px;
+    height: 48px;
+}
+
+.header-content {
+    flex: 1;
+    text-align: center;
+}
+
+.header-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.header-content p {
+    margin-top: 6px;
+    color: rgba(255,255,255,0.75);
+}
+
+/* Page Cards */
+.page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.page-card {
+    background: var(--card);
+    padding: 32px;
+    border-radius: 18px;
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: all 0.25s ease;
+    text-align: left;
+}
+
+.page-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.12);
+}
+
+.page-card h2 {
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.page-card p {
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.page-card .action {
+    display: inline-block;
+    margin-top: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.page-card:hover .action {
+    background: var(--primary-dark);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    header {
+        padding: 16px;
+    }
+
+    .header-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .page-card {
+        padding: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <a class="logo" href="index.html">
+            <img src="https://i.postimg.cc/RNdzbW73/homeong.png" alt="Home">
+        </a>
+
+        <div class="header-content">
+            <h1>Select a Page</h1>
+            <p>Choose a tool to continue</p>
+        </div>
+    </header>
+
+    <div class="page-grid">
+
+        <a href="differentiatedprice.html" class="page-card">
+            <h2>Differentiated Price</h2>
+            <p>
+                Configure and manage differentiated pricing strategies
+                for products.
+            </p>
+            <span class="action">Open Page →</span>
+        </a>
+
+        <a href="autoshipdiscount.html" class="page-card">
+            <h2>Autoship Discount</h2>
+            <p>
+                Autoship discounts configuration simulator
+            </p>
+            <span class="action">Open Page →</span>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
 </html>

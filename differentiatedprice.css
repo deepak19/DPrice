@@ -14,41 +14,55 @@
     --store-tag-bg: #EAEAEA;
     --store-tag-thumb: #9E9E9E;
 }
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #EBF0F5;
     color: var(--text-dark);
     margin: 0;
-    padding: 25px;
+    padding: 16px;
 }
 
 .container {
-    max-width: 1350px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 header {
-	display: flex;
-    background-color: #000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #111827;
     color: white;
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-header .div-10 {
-  flex-basis: 10%;
-  flex-shrink: 0; 
+    padding: 14px 20px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
 }
 
-header .div-80 {
-  flex-basis: 80%;
-  flex-shrink: 0;
+.logo img {
+    width: 40px;
+    height: 40px;
 }
-header h1 { margin: 0; font-size: 24px; }
-header p { margin: 6px 0 0 0; font-size: 14px; opacity: 0.8; }
+
+.header-content {
+    flex: 1;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+}
+
+header p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,.75);
+}
 
 .main-layout {
     display: grid;
