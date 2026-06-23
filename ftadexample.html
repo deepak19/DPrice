@@ -45,7 +45,7 @@
         }
 
         header {
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 6px;
             animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -54,6 +54,25 @@
         h1 { margin: 0 0 2px 0; font-size: 22px; }
         h2 { font-size: 16px; margin-top: 0; margin-bottom: 8px; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;}
         .meta-subtitle { color: var(--text-muted); font-size: 13px; margin: 0; }
+
+        /* Context Legend Styles */
+        .legend-box {
+            display: flex;
+            gap: 20px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: #475569;
+            animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        .legend-title { font-weight: bold; color: var(--text-main); }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-badge { font-family: monospace; font-weight: bold; font-size: 12px; }
 
         .config-grid {
             display: grid;
@@ -72,7 +91,6 @@
             transform: translateY(15px);
         }
 
-        /* Staggered and Slowed Loading Track */
         .panel-configs-left {
             animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
         }
@@ -140,13 +158,13 @@
         
         .scld-yes { background-color: #ffedd5; color: #c2410c; font-weight: bold; }
         
-        .audit-col { font-family: monospace; font-weight: 600; color: #475569; background-color: #fcfcfc; }
+        .scld-col { font-family: monospace; font-weight: 600; color: #475569; background-color: #fcfcfc; }
         
-        /* Inline Tag Rules with Custom Request Values */
+        /* Inline Tag Rules with Custom Request Colors */
         .src-tag { font-weight: bold; font-size: 12px; margin-left: 3px; }
         .src-tag-p { color: var(--color-src-p); }
         .src-tag-b { color: var(--color-src-b); }
-        .src-tag-g { color: var(--color-src-g); }
+        .src-tag-d { color: var(--color-src-g); }
         .src-tag-none { color: #64748b; }
 
         /* Brand Text Utilities */
@@ -168,7 +186,7 @@
         .hover-target .popup-pane {
             visibility: hidden;
             width: 310px;
-            background-color: #0f172a; /* Slate 900 for modern console style */
+            background-color: #0f172a; 
             color: #f1f5f9;
             text-align: left;
             border-radius: 6px;
@@ -190,7 +208,7 @@
         .hover-target .popup-pane h4 {
             margin: 0 0 6px 0;
             font-size: 13px;
-            color: #38bdf8; /* Light Sky Blue heading */
+            color: #38bdf8; 
             border-bottom: 1px solid #334155;
             padding-bottom: 2px;
         }
@@ -233,7 +251,6 @@
         .summary-item.disc span { color: var(--danger); }
         .summary-item.final span { color: var(--success); font-size: 17px; }
 
-        /* Slow, Elegant Smooth Keyframe Animation */
         @keyframes slideIn {
             to {
                 opacity: 1;
@@ -249,6 +266,13 @@
         <h1>FTAD Example Cart</h1>
         <p class="meta-subtitle">Simulation — Boundary Verification & Shared Cap Allocations</p>
     </header>
+
+    <div class="legend-box">
+        <span class="legend-title">Waterfall Source Mapping:</span>
+        <span class="legend-item"><span class="src-tag src-tag-p legend-badge">(P)</span> Product Value</span>
+        <span class="legend-item"><span class="src-tag src-tag-b legend-badge">(B)</span> Brand Configuration</span>
+        <span class="legend-item"><span class="src-tag src-tag-d legend-badge">(D)</span> Default Value</span>
+    </div>
 
     <div class="config-grid">
         <div class="panel panel-configs-left">
@@ -315,8 +339,8 @@
                     <th style="font-weight: 600;">Subtotal</th>
                     <th>Brand</th>
                     <th>Product.xp.FTAD</th>
-                    <th class="audit-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedFTAD</th>
-                    <th class="audit-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedMaxLimit</th>
+                    <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedFTAD</th>
+                    <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedMaxLimit</th>
                     <th>Uncapped Disc.</th>
                     <th>Final Discount</th>
                     <th style="text-align: center;">Scaled?</th>
@@ -341,8 +365,8 @@
                     <td style="font-weight: bold;">$100.00</td>
                     <td><span class="txt-brand-a">Brand A</span></td>
                     <td></td>
-                    <td class="audit-col">15%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="audit-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">15%<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$15.00</td>
                     <td style="font-weight: 600;">$15.00</td>
                     <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
@@ -354,7 +378,7 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Custom Product override (25%) takes absolute top priority.</li>
+                                    <li><b>Waterfall Route:</b> Product value (25%) takes absolute top priority.</li>
                                     <li><b>Math:</b> $55.00 × 25% = $13.75 Uncapped.</li>
                                     <li><b>Grouping:</b> EnforceBrandOverride == true pools this item with Kibble against the $30.00 limit.</li>
                                     <li><b>Constraint Result:</b> Group under cap limit; scaling skipped.</li>
@@ -365,8 +389,8 @@
                     <td style="font-weight: bold;">$55.00</td>
                     <td><span class="txt-brand-a">Brand A</span></td>
                     <td>25%</td>
-                    <td class="audit-col">25%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="audit-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">25%<span class="src-tag src-tag-p">(P)</span></td>
+                    <td class="scld-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$13.75</td>
                     <td style="font-weight: 600;">$13.75</td>
                     <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
@@ -388,8 +412,8 @@
                     <td style="font-weight: bold;">$100.00</td>
                     <td><span class="txt-brand-b">Brand B</span></td>
                     <td></td>
-                    <td class="audit-col">0%<span class="src-tag src-tag-none">(NONE)</span></td>
-                    <td class="audit-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">0%<span class="src-tag src-tag-none">(NONE)</span></td>
+                    <td class="scld-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$0.00</td>
                     <td style="color: var(--text-muted); font-weight: 600;">$0.00</td>
                     <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
@@ -401,7 +425,7 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Product override value (38%) matches valid limit boundaries.</li>
+                                    <li><b>Waterfall Route:</b> Product value (38%) matches valid limit boundaries.</li>
                                     <li><b>Math:</b> $50.00 × 38% = $19.00 Uncapped.</li>
                                     <li><b>Grouping:</b> EnforceBrandOverride == false isolates this line item as a standalone cap.</li>
                                     <li><b>Constraint Result:</b> $19.00 is safely under the Brand B standalone limit ($50.00). Passes untouched.</li>
@@ -412,8 +436,8 @@
                     <td style="font-weight: bold;">$50.00</td>
                     <td><span class="txt-brand-b">Brand B</span></td>
                     <td>38%</td>
-                    <td class="audit-col">38%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="audit-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">38%<span class="src-tag src-tag-p">(P)</span></td>
+                    <td class="scld-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$19.00</td>
                     <td style="font-weight: 600;">$19.00</td>
                     <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
@@ -436,8 +460,8 @@
                     <td style="font-weight: bold;">$120.00</td>
                     <td><span class="txt-brand-c">Brand C</span></td>
                     <td></td>
-                    <td class="audit-col">20%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="audit-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">20%<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$24.00</td>
                     <td style="font-weight: 600;">$24.00</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -449,7 +473,7 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Custom Product override (30%) wins priority waterfall.</li>
+                                    <li><b>Waterfall Route:</b> Product value (30%) wins priority waterfall.</li>
                                     <li><b>Math:</b> $80.00 × 30% = $24.00 Uncapped.</li>
                                     <li><b>Grouping:</b> Overridden flag is ignored during shared proportional limit adjustments.</li>
                                     <li><b>Constraint Result:</b> Proportional scale applied: $40 × ($80 subtotal / $200 pool subtotal) = $16.00.</li>
@@ -460,8 +484,8 @@
                     <td style="font-weight: bold;">$80.00</td>
                     <td><span class="txt-brand-c">Brand C</span></td>
                     <td>30%</td>
-                    <td class="audit-col">30%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="audit-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">30%<span class="src-tag src-tag-p">(P)</span></td>
+                    <td class="scld-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
                     <td>$24.00</td>
                     <td style="font-weight: 600;">$16.00</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -475,8 +499,8 @@
                                 <ul>
                                     <li><b>Waterfall Route:</b> Product (null) → Brand Config (25%) wins.</li>
                                     <li><b>Math:</b> $65.00 × 25% = $16.25 Uncapped.</li>
-                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Global Limit ($25.00).</li>
-                                    <li><b>Constraint Result:</b> Global limits force group distribution: $25 × ($65 line subtotal / $105 pool subtotal) = $15.48.</li>
+                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Default Limit ($25.00).</li>
+                                    <li><b>Constraint Result:</b> Default limits force group distribution: $25 × ($65 line subtotal / $105 pool subtotal) = $15.48.</li>
                                 </ul>
                             </span>
                         </span>
@@ -484,8 +508,8 @@
                     <td style="font-weight: bold;">$65.00</td>
                     <td><span class="txt-brand-d">Brand D</span></td>
                     <td></td>
-                    <td class="audit-col">25%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">25%<span class="src-tag src-tag-b">(B)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$16.25</td>
                     <td style="font-weight: 600;">$15.48</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -497,9 +521,9 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Custom Product override (10%) takes precedence.</li>
+                                    <li><b>Waterfall Route:</b> Product value (10%) takes precedence.</li>
                                     <li><b>Math:</b> $40.00 × 10% = $4.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Override flag (false) is explicitly ignored because a global limit fallback occurred.</li>
+                                    <li><b>Grouping:</b> Override flag (false) is explicitly ignored because a Default limit fallback occurred.</li>
                                     <li><b>Constraint Result:</b> Proportional scaling triggers: $25 × ($40 line subtotal / $105 pool subtotal) = $9.52.</li>
                                 </ul>
                             </span>
@@ -508,8 +532,8 @@
                     <td style="font-weight: bold;">$40.00</td>
                     <td><span class="txt-brand-d">Brand D</span></td>
                     <td>10%</td>
-                    <td class="audit-col">10%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">10%<span class="src-tag src-tag-p">(P)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$4.00</td>
                     <td style="font-weight: 600;">$9.52</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -521,9 +545,9 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Complete unconfigured brand triggers total Global Baseline Fallback (35%).</li>
+                                    <li><b>Waterfall Route:</b> Complete unconfigured brand triggers total Default Baseline Fallback (35%).</li>
                                     <li><b>Math:</b> $20.00 × 35% = $7.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Global Limit ($25.00).</li>
+                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Default Limit ($25.00).</li>
                                     <li><b>Constraint Result:</b> Scaled against the shared total pool: $25 × ($20 line subtotal / $260 brand total pool subtotal) = $1.92.</li>
                                 </ul>
                             </span>
@@ -532,8 +556,8 @@
                     <td style="font-weight: bold;">$20.00</td>
                     <td><span class="txt-brand-e">Brand E</span></td>
                     <td></td>
-                    <td class="audit-col">35%<span class="src-tag src-tag-g">(G)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$7.00</td>
                     <td style="font-weight: 600;">$1.92</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -545,7 +569,7 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Completely unconfigured brand cascades to Global baseline (35%).</li>
+                                    <li><b>Waterfall Route:</b> Completely unconfigured brand cascades to Default baseline (35%).</li>
                                     <li><b>Math:</b> $40.00 × 35% = $14.00 Uncapped.</li>
                                     <li><b>Grouping:</b> Evaluated as part of the shared Brand E fallback constraint cluster.</li>
                                     <li><b>Constraint Result:</b> Scaled against pool: $25 × ($40 line subtotal / $260 pool subtotal) = $3.85.</li>
@@ -556,8 +580,8 @@
                     <td style="font-weight: bold;">$40.00</td>
                     <td><span class="txt-brand-e">Brand E</span></td>
                     <td></td>
-                    <td class="audit-col">35%<span class="src-tag src-tag-g">(G)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$14.00</td>
                     <td style="font-weight: 600;">$3.85</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -569,9 +593,9 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Bounded custom product override (35%) wins priority waterfall.</li>
+                                    <li><b>Waterfall Route:</b> Product value (35%) wins priority waterfall.</li>
                                     <li><b>Math:</b> $60.00 × 35% = $21.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Global limit fallbacks automatically aggregate and scale all valid elements.</li>
+                                    <li><b>Grouping:</b> Default limit fallbacks automatically aggregate and scale all valid elements.</li>
                                     <li><b>Constraint Result:</b> Scaled against pool: $25 × ($60 line subtotal / $260 pool subtotal) = $5.77.</li>
                                 </ul>
                             </span>
@@ -580,8 +604,8 @@
                     <td style="font-weight: bold;">$60.00</td>
                     <td><span class="txt-brand-e">Brand E</span></td>
                     <td>35%</td>
-                    <td class="audit-col">35%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">35%<span class="src-tag src-tag-p">(P)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$21.00</td>
                     <td style="font-weight: 600;">$5.77</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
@@ -593,7 +617,7 @@
                             <span class="popup-pane">
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
-                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (null) → Global Default (35%).</li>
+                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (null) → Default Default (35%).</li>
                                     <li><b>Math:</b> $140.00 × 35% = $49.00 Uncapped.</li>
                                     <li><b>Grouping:</b> Heaviest line element contribution in the unconfigured Brand E bucket pool.</li>
                                     <li><b>Constraint Result:</b> Scaled against pool: $25 × ($140 line subtotal / $260 pool subtotal) = $13.46.</li>
@@ -604,8 +628,8 @@
                     <td style="font-weight: bold;">$140.00</td>
                     <td><span class="txt-brand-e">Brand E</span></td>
                     <td></td>
-                    <td class="audit-col">35%<span class="src-tag src-tag-g">(G)</span></td>
-                    <td class="audit-col">$25.00<span class="src-tag src-tag-g">(G)</span></td>
+                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
+                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
                     <td>$49.00</td>
                     <td style="font-weight: 600;">$13.46</td>
                     <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
