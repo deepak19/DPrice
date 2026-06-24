@@ -1,734 +1,1182 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FTAD Discount Engine: Test Case Dashboard</title>
-    <style>
-        :root {
-            --bg-main: #f8fafc;
-            --panel-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --primary: #3b82f6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            
-            /* Explicit Requested Sources Palette */
-            --color-src-p: #2563eb;
-            --color-src-b: #167037;
-            --color-src-g: #ea580c;
-
-            /* Distinguishable Brand Specific Color Codes */
-            --brand-a-color: #c026d3; /* Dark Magenta */
-            --brand-b-color: #059669; /* Deep Emerald */
-            --brand-c-color: #dc2626; /* Strong Crimson */
-            --brand-d-color: #2563eb; /* Cobalt Blue */
-            --brand-e-color: #d97706; /* Vivid Amber */
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            margin: 0;
-            padding: 14px;
-            line-height: 1.4;
-            font-size: 13px;
-        }
-
-        .container {
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-
-        header {
-            margin-bottom: 10px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 6px;
-            animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        h1 { margin: 0 0 2px 0; font-size: 22px; }
-        h2 { font-size: 16px; margin-top: 0; margin-bottom: 8px; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;}
-        .meta-subtitle { color: var(--text-muted); font-size: 13px; margin: 0; }
-
-        /* Context Legend Styles */
-        .legend-box {
-            display: flex;
-            gap: 20px;
-            background: #f1f5f9;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin-bottom: 14px;
-            font-size: 12px;
-            color: #475569;
-            animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-            opacity: 0;
-            transform: translateY(15px);
-        }
-        .legend-title { font-weight: bold; color: var(--text-main); }
-        .legend-item { display: flex; align-items: center; gap: 4px; }
-        .legend-badge { font-family: monospace; font-weight: bold; font-size: 12px; }
-
-        .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 3fr;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-
-        .panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-            opacity: 0;
-            transform: translateY(15px);
-		    position: relative;
-        }
-
-        /* Prevent parent container stacking conflicts during an active image modal preview hover */
-        .panel:has(.img-trigger:hover) {
-            z-index: 50;
-        } 
-        .panel-configs-left {
-            animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-        }
-
-        .panel-configs-right {
-            animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
-        }
-
-        .panel-cart-matrix {
-            animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
-        }
-
-        .global-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .global-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed var(--border-color);
-            font-size: 13px;
-        }
-        .global-list li:last-child { border-bottom: none; }
-        .global-list span.val { font-weight: 600; color: var(--primary); }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f1f5f9;
-            color: #475569;
-            font-weight: 600;
-            padding: 6px 8px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        td {
-            padding: 6px 8px;
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.15s ease;
-        }
-
-        tr:hover td { 
-            background-color: #f8fafc; 
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 1px 4px;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-true { background-color: #dcfce7; color: #15803d; }
-        .badge-false { background-color: #f1f5f9; color: #475569; }
-        
-        .scld-yes { background-color: #ffedd5; color: #c2410c; font-weight: bold; }
-        
-        .scld-col { font-family: monospace; font-weight: 600; color: #475569; background-color: #fcfcfc; }
-        
-        /* Inline Tag Rules with Custom Request Colors */
-        .src-tag { font-weight: bold; font-size: 12px; margin-left: 3px; }
-        .src-tag-p { color: var(--color-src-p); }
-        .src-tag-b { color: var(--color-src-b); }
-        .src-tag-d { color: var(--color-src-g); }
-        .src-tag-none { color: #64748b; }
-
-        /* Brand Text Utilities */
-        .txt-brand-a { color: var(--brand-a-color); font-weight: bold; }
-        .txt-brand-b { color: var(--brand-b-color); font-weight: bold; }
-        .txt-brand-c { color: var(--brand-c-color); font-weight: bold; }
-        .txt-brand-d { color: var(--brand-d-color); font-weight: bold; }
-        .txt-brand-e { color: var(--brand-e-color); font-weight: bold; }
-
-        /* Title with Interactive Link Trigger Wrapper */
-        .title-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 4px;
-            margin-bottom: 8px;
-        }
-        .title-container h2 {
-            margin: 0;
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        /* Interactive Image Link popup trigger button */
-        .img-trigger {
-            font-size: 11px;
-            color: var(--primary);
-            text-decoration: none;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-        .img-trigger:hover {
-            background: #dbeafe;
-        }
-
-        /* Image link popup layout panel container */
-        .img-trigger .img-popup-pane {
-            visibility: hidden;
-            width: 420px;
-            background-color: #0f172a;
-            color: #f1f5f9;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1000;
-            top: 125%;
-            right: 0;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            transform: translateY(4px);
-            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
-        }
-        .img-trigger .img-popup-pane h4 {
-            margin: 0 0 6px 0;
-            font-size: 12px;
-            color: #38bdf8;
-            text-align: left;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 2px;
-        }
-        .img-trigger .img-popup-pane img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            background: #1e293b;
-            display: block;
-        }
-        .img-trigger:hover .img-popup-pane {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* CSS Tooltip/Popup Structure */
-        .hover-target {
-            position: relative;
-            cursor: help;
-            color: var(--text-main);
-            border-bottom: 1px dotted var(--text-muted);
-            display: inline-block;
-        }
-
-        .hover-target .popup-pane {
-            visibility: hidden;
-            width: 310px;
-            background-color: #0f172a; 
-            color: #f1f5f9;
-            text-align: left;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 999;
-            top: 115%;
-            left: 0;
-            box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transform: translateY(4px);
-            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
-            font-size: 12px;
-            font-weight: normal;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.35;
-        }
-
-        .hover-target .popup-pane h4 {
-            margin: 0 0 6px 0;
-            font-size: 13px;
-            color: #38bdf8; 
-            border-bottom: 1px solid #334155;
-            padding-bottom: 2px;
-        }
-
-        .hover-target .popup-pane ul {
-            margin: 0;
-            padding-left: 14px;
-        }
-
-        .hover-target .popup-pane ul li {
-            margin-bottom: 4px;
-        }
-
-        .hover-target .popup-pane code {
-            background-color: #1e293b;
-            padding: 1px 3px;
-            border-radius: 3px;
-            color: #f43f5e;
-            font-family: monospace;
-        }
-
-        .hover-target:hover .popup-pane {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .summary-bar {
-            display: flex;
-            justify-content: flex-end;
-            gap: 30px;
-            margin-top: 12px;
-            padding: 10px 12px;
-            background: #f1f5f9;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-        .summary-item span { color: var(--text-main); margin-left: 6px; }
-        .summary-item.disc span { color: var(--danger); }
-        .summary-item.final span { color: var(--success); font-size: 17px; }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>FTAD Example Cart</h1>
-        <p class="meta-subtitle">Simulation — Boundary Verification & Shared Cap Allocations</p>
-    </header>
-
-    <div class="legend-box">
-        <span class="legend-title">Waterfall Source Mapping:</span>
-        <span class="legend-item"><span class="src-tag src-tag-p legend-badge">(P)</span> Product Value</span>
-        <span class="legend-item"><span class="src-tag src-tag-b legend-badge">(B)</span> Brand Configuration</span>
-        <span class="legend-item"><span class="src-tag src-tag-d legend-badge">(D)</span> Default Value</span>
-    </div>
-
-    <div class="config-grid">
-        <div class="panel panel-configs-left">
-            <h2>Default Value</h2>
-            <ul class="global-list">
-                <li><span>FTAD Percent:</span> <span class="val">35%</span></li>
-                <li><span>FTAD Limit:</span> <span class="val">$25.00</span></li>
-                <li><span>Recurring Percent:</span> <span class="val">5%</span></li>
-            </ul>
-            <h2 style="margin-top: 12px; font-size: 13px;">User History Cache</h2>
-            <p style="font-size: 12px; margin: 0; color: var(--text-muted);">
-                FTAD already availed for: <code style="color:var(--danger); font-weight:bold;">Organic Catnip</code>
-            </p>
-        </div>
-
-        <div class="panel panel-configs-right">
-            <div class="title-container">
-                <h2>Sitecore Brand Config</h2>
-                <span class="img-trigger">ⓘ View Schema
-                    <span class="img-popup-pane">
-                        <h4>Sitecore Brand Configuration</h4>
-                        <img src="https://i.postimg.cc/nzJhZ4nB/image.png?auto=format&fit=crop&w=400&q=80" alt="Brand config">
-                    </span>
-                </span>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>FTAD Discount Engine: Test Case Dashboard</title>
+      <style>
+         :root {
+         --bg-main: #f8fafc;
+         --panel-bg: #ffffff;
+         --border-color: #e2e8f0;
+         --text-main: #1e293b;
+         --text-muted: #64748b;
+         --primary: #3b82f6;
+         --success: green;
+         --warning: #f59e0b;
+         --danger: #ef4444;
+         /* Explicit Requested Sources Palette */
+         --color-src-p: #2563eb;
+         --color-src-b: #167037;
+         --color-src-g: #ea580c;
+         /* Distinguishable Brand Specific Color Codes */
+         --brand-a-color: #c026d3; /* Dark Magenta */
+         --brand-b-color: #059669; /* Deep Emerald */
+         --brand-c-color: #dc2626; /* Strong Crimson */
+         --brand-d-color: #2563eb; /* Cobalt Blue */
+         --brand-e-color: #d97706; /* Vivid Amber */
+         --brand-f-color: #475569;				   
+         }
+         body {
+         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         background-color: var(--bg-main);
+         color: var(--text-main);
+         margin: 0;
+         padding: 14px;
+         line-height: 1.4;
+         font-size: 13px;
+         }
+         .container {
+         max-width: 1500px;
+         margin: 0 auto;
+         }
+         header {
+         margin-bottom: 10px;
+         border-bottom: 2px solid var(--border-color);
+         padding-bottom: 6px;
+         animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+         }
+         h1 { margin: 0 0 2px 0; font-size: 22px; }
+         h2 { font-size: 16px; margin-top: 0; margin-bottom: 8px; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;}
+         .meta-subtitle { color: var(--text-muted); font-size: 13px; margin: 0; }
+         /* Context Legend Styles */
+         .legend-box {
+         display: flex;
+         gap: 20px;
+         background: #f1f5f9;
+         border: 1px solid var(--border-color);
+         border-radius: 6px;
+         padding: 8px 12px;
+         margin-bottom: 14px;
+         font-size: 12px;
+         color: #475569;
+         animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+         opacity: 0;
+         transform: translateY(15px);
+         }
+         .legend-title { font-weight: bold; color: var(--text-main); }
+         .legend-item { display: flex; align-items: center; gap: 4px; }
+         .legend-badge { font-family: monospace; font-weight: bold; font-size: 12px; }
+         .config-grid {
+         display: grid;
+         grid-template-columns: 1fr 3fr;
+         gap: 14px;
+         margin-bottom: 14px;
+         }
+         .panel {
+         background: var(--panel-bg);
+         border: 1px solid var(--border-color);
+         border-radius: 6px;
+         padding: 10px 12px;
+         box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+         opacity: 0;
+         transform: translateY(15px);
+         position: relative;
+         }
+         .panel:has(.img-trigger:hover) {
+         z-index: 50;
+         }
+         .panel-configs-left {
+         animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+         }
+         .panel-configs-right {
+         animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+         }
+         .panel-cart-matrix {
+         animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+         }
+         .global-list {
+         list-style: none;
+         padding: 0;
+         margin: 0;
+         }
+         .global-list li {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 5px 0;
+         border-bottom: 1px dashed var(--border-color);
+         font-size: 13px;
+         }
+         .global-list li:last-child { border-bottom: none; }
+         /* Form Inputs */
+         input[type="number"], select {
+         width: 70px;
+         padding: 2px 4px;
+         font-size: 12px;
+         border: 1px solid #cbd5e1;
+         border-radius: 4px;
+         color: #0f172a;
+         font-weight: 500;
+         }
+         input[type="number"]:focus, select:focus {
+         outline: none;
+         border-color: var(--primary);
+         background: #fff;
+         }
+         .table-input { font-weight: bold !important; }
+         .inline-input-container {
+         display: flex;
+         align-items: center;
+         }
+         .inline-input-container input {
+         width: 55px;
+         padding: 2px 4px;
+         border: 1px solid var(--border-color);
+         border-radius: 4px;
+         font-size: 12px;
+         font-weight: 600;
+         color: var(--primary);
+         text-align: right;
+         }
+         .inline-input-container span.unit {
+         margin-left: 2px;
+         font-weight: 600;
+         color: var(--primary);
+         font-size: 12px;
+         }
+         td .inline-input-container input {
+         color: #0f172a;
+         }
+         table {
+         width: 100%;
+         border-collapse: collapse;
+         font-size: 13px;
+         text-align: left;
+         }
+         th {
+         background-color: #f1f5f9;
+         color: #475569;
+         font-weight: 600;
+         padding: 6px 8px;
+         border-bottom: 2px solid var(--border-color);
+         }
+         td {
+         padding: 6px 8px;
+         border-bottom: 1px solid var(--border-color);
+         transition: background-color 0.15s ease;
+         }
+         tr:hover td { 
+         background-color: #f8fafc; 
+         }
+         /* Exclusion and Strikeout CSS Rules */
+         tr.line-excluded {
+         text-decoration: line-through;
+         color: var(--text-muted);
+         opacity: 0.55;
+         }
+         tr.line-excluded input:not(.item-toggle), tr.line-excluded select {
+         text-decoration: line-through;
+         opacity: 0.5;
+         pointer-events: none;
+         }
+         tr.line-excluded .item-toggle {
+         pointer-events: auto !important;
+         cursor: pointer;
+         }
+         tr.line-excluded .badge {
+         opacity: 0.4;
+         background-color: #e2e8f0 !important;
+         color: #64748b !important;
+         }
+         .badge {
+         display: inline-block;
+         padding: 1px 4px;
+         border-radius: 3px;
+         font-size: 11px;
+         font-weight: 600;
+         text-transform: uppercase;
+         }
+         .badge-true { background-color: #dcfce7; color: #15803d; }
+         .badge-false { background-color: #f1f5f9; color: #475569; }
+         .scld-yes { background-color: #ffedd5; color: #c2410c; font-weight: bold; }
+         .scld-col { font-family: monospace; font-weight: 600; color: #475569; background-color: #fcfcfc; }
+         /* Inline Tag Rules with Custom Request Values */
+         .src-tag { font-weight: bold; font-size: 12px; margin-left: 3px; }
+         .src-tag-p { color: var(--color-src-p); }
+         .src-tag-b { color: var(--color-src-b); }
+         .src-tag-d { color: var(--color-src-g); }
+         .src-tag-none { color: #64748b; }
+         /* Brand Text Utilities */
+         .txt-brand-a { color: var(--brand-a-color); font-weight: bold; }
+         .txt-brand-b { color: var(--brand-b-color); font-weight: bold; }
+         .txt-brand-c { color: var(--brand-c-color); font-weight: bold; }
+         .txt-brand-d { color: var(--brand-d-color); font-weight: bold; }
+         .txt-brand-e { color: var(--brand-e-color); font-weight: bold; }
+         .txt-brand-f { color: var(--brand-f-color); font-weight: bold; }
+         /* Title with Interactive Link Trigger Wrapper */
+         .title-container {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         border-bottom: 1px solid var(--border-color);
+         padding-bottom: 4px;
+         margin-bottom: 8px;
+         }
+         .title-container h2 {
+         margin: 0;
+         border-bottom: none;
+         padding-bottom: 0;
+         }
+         /* Interactive Image Link popup trigger button */
+         .img-trigger {
+         font-size: 11px;
+         color: var(--primary);
+         text-decoration: none;
+         background: #eff6ff;
+         border: 1px solid #bfdbfe;
+         padding: 2px 6px;
+         border-radius: 4px;
+         font-weight: 600;
+         position: relative;
+         cursor: pointer;
+         transition: background 0.15s ease;
+         }
+         .img-trigger:hover {
+         background: #dbeafe;
+         }
+         /* Image link popup layout panel container */
+         .img-trigger .img-popup-pane {
+         visibility: hidden;
+         width: 344px;
+         background-color: #0f172a;
+         color: #f1f5f9;
+         text-align: center;
+         border-radius: 6px;
+         padding: 10px;
+         position: absolute;
+         z-index: 1000;
+         top: 125%;
+         right: 0;
+         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+         opacity: 0;
+         transform: translateY(4px);
+         transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
+         }
+         .img-trigger .img-popup-pane h4 {
+         margin: 0 0 6px 0;
+         font-size: 12px;
+         color: #38bdf8;
+         text-align: left;
+         border-bottom: 1px solid #334155;
+         padding-bottom: 2px;
+         }
+         .img-trigger:hover .img-popup-pane {
+         visibility: visible;
+         opacity: 1;
+         transform: translateY(0);
+         }
+         /* CSS Tooltip/Popup Structure */
+         .hover-target {
+         position: relative;
+         cursor: help;
+         color: var(--text-main);
+         border-bottom: 1px dotted var(--text-muted);
+         display: inline-block;
+         }
+         .hover-target .popup-pane {
+         visibility: hidden;
+         width: 310px;
+         background-color: #0f172a; 
+         color: #f1f5f9;
+         text-align: left;
+         border-radius: 6px;
+         padding: 10px;
+         position: absolute;
+         z-index: 999;
+         top: 115%;
+         left: 0;
+         box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.3);
+         opacity: 0;
+         transform: translateY(4px);
+         transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
+         font-size: 12px;
+         font-weight: normal;
+         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+         line-height: 1.35;
+         }
+         .hover-target .popup-pane h4 {
+         margin: 0 0 6px 0;
+         font-size: 13px;
+         color: #38bdf8; 
+         border-bottom: 1px solid #334155;
+         padding-bottom: 2px;
+         }
+         .hover-target .popup-pane ul {
+         margin: 0;
+         padding-left: 14px;
+         }
+         .hover-target .popup-pane ul li {
+         margin-bottom: 4px;
+         }
+         .hover-target .popup-pane code {
+         background-color: #1e293b;
+         padding: 1px 3px;
+         border-radius: 3px;
+         color: #f43f5e;
+         font-family: monospace;
+         }
+         .hover-target:hover .popup-pane {
+         visibility: visible;
+         opacity: 1;
+         transform: translateY(0);
+         }
+         .summary-bar {
+         display: flex;
+         justify-content: flex-end;
+         gap: 30px;
+         margin-top: 12px;
+         padding: 10px 12px;
+         background: #f1f5f9;
+         border-radius: 6px;
+         font-size: 15px;
+         font-weight: bold;
+         }
+         .summary-item span { color: var(--text-main); margin-left: 6px; }
+         .summary-item.disc span { color: var(--danger); }
+         .summary-item.final span { color: var(--success); font-size: 17px; }
+		 .fin-disc { font-weight: 600; }
+		 .fin-total { font-weight: 700; color: var(--success); }
+         @keyframes slideIn {
+         to {
+         opacity: 1;
+         transform: translateY(0);
+         }
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <header>
+            <h1>FTAD Example Cart</h1>
+            <p class="meta-subtitle">Simulation — Boundary Verification & Shared Cap Allocations</p>
+         </header>
+         <div class="legend-box">
+            <span class="legend-title">Waterfall Source Mapping:</span>
+            <span class="legend-item"><span class="src-tag src-tag-p legend-badge">(P)</span> Product Value</span>
+            <span class="legend-item"><span class="src-tag src-tag-b legend-badge">(B)</span> Brand Configuration</span>
+            <span class="legend-item"><span class="src-tag src-tag-d legend-badge">(D)</span> Default Value</span>
+         </div>
+         <div class="config-grid">
+            <div class="panel panel-configs-left">
+               <h2>Default Value</h2>
+               <ul class="global-list">
+                  <li>
+                     <span>FTAD Percent:</span>
+                     <div class="inline-input-container">
+                        <input type="number" id="input-default-pct" value="35" min="0" max="100">
+                        <span class="unit">%</span>
+                     </div>
+                  </li>
+                  <li>
+                     <span>FTAD Limit:</span>
+                     <div class="inline-input-container">
+                        <span class="unit" style="margin-right:2px; margin-left:0;">$</span>
+                        <input type="number" id="input-default-limit" value="25.00" min="0" step="1">
+                     </div>
+                  </li>
+                  <li>
+                     <span>Recurring Percent:</span>
+                     <div class="inline-input-container">
+                        <input type="number" id="input-default-recurring" value="5" min="0" max="100">
+                        <span class="unit">%</span>
+                     </div>
+                  </li>
+               </ul>
+               <h2 style="margin-top: 12px; font-size: 13px;">User History Cache</h2>
+               <p style="font-size: 12px; margin: 0; color: var(--text-muted);">
+                  FTAD already availed for: <code style="color:var(--danger); font-weight:bold;">Organic Catnip</code>
+               </p>
             </div>
-            <table>
-                <thead>
-                    <tr>
+            <div class="panel panel-configs-right">
+               <div class="title-container">
+                  <h2>Sitecore Brand Config</h2>
+                  <div class="img-trigger">
+                     [ⓘ View Schema]
+                     <span class="img-popup-pane">
+                        <h4>Sitecore Brand Configuration</h4>
+                        <img src="https://i.postimg.cc/nzJhZ4nB/image.png" alt="Brand config">
+                     </span>
+                  </div>
+               </div>
+               <table id="brand-config-table">
+                  <thead>
+                     <tr>
                         <th>Brand Name</th>
                         <th>FTAD Percent</th>
                         <th>FTAD Limit</th>
                         <th>EnforceBrandOverride</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr data-brand="Brand A">
                         <td><span class="txt-brand-a">Brand A</span></td>
-                        <td>15%</td>
-                        <td>$30.00</td>
-                        <td><span class="badge badge-true">TRUE</span></td>
-                    </tr>
-                    <tr>
+                        <td>
+                           <div class="inline-input-container">
+                              <input type="number" class="br-pct" value="15" min="0" max="100"><span class="unit">%</span>
+                           </div>
+                        </td>
+                        <td>
+                           <div class="inline-input-container"><span class="unit">$</span>
+                              <input type="number" class="br-lim" value="30" min="0">
+                           </div>
+                        </td>
+                        <td>
+                           <select class="br-ovr">
+                              <option value="true" selected>TRUE</option>
+                              <option value="false">FALSE</option>
+                           </select>
+                        </td>
+                     </tr>
+                     <tr data-brand="Brand B">
                         <td><span class="txt-brand-b">Brand B</span></td>
-                        <td></td>
-                        <td>$50.00</td>
-                        <td><span class="badge badge-false">FALSE</span></td>
-                    </tr>
-                    <tr>
+                        <td>
+                           <div class="inline-input-container">
+                              <input type="number" class="br-pct" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                           </div>
+                        </td>
+                        <td>
+                           <div class="inline-input-container"><span class="unit">$</span>
+                              <input type="number" class="br-lim" value="50" min="0">
+                           </div>
+                        </td>
+                        <td>
+                           <select class="br-ovr">
+                              <option value="true">TRUE</option>
+                              <option value="false" selected>FALSE</option>
+                           </select>
+                        </td>
+                     </tr>
+                     <tr data-brand="Brand C">
                         <td><span class="txt-brand-c">Brand C</span></td>
-                        <td>20%</td>
-                        <td>$40.00</td>
-                        <td><span class="badge badge-true">TRUE</span></td>
-                    </tr>
-                    <tr>
+                        <td>
+                           <div class="inline-input-container">
+                              <input type="number" class="br-pct" value="20" min="0" max="100"><span class="unit">%</span>
+                           </div>
+                        </td>
+                        <td>
+                           <div class="inline-input-container"><span class="unit">$</span>
+                              <input type="number" class="br-lim" value="" min="0">
+                           </div>
+                        </td>
+                        <td>
+                           <select class="br-ovr">
+                              <option value="true" selected>TRUE</option>
+                              <option value="false">FALSE</option>
+                           </select>
+                        </td>
+                     </tr>
+                     <tr data-brand="Brand D">
                         <td><span class="txt-brand-d">Brand D</span></td>
-                        <td>25%</td>
-                        <td></td>
-                        <td><span class="badge badge-false">FALSE</span></td>
-                    </tr>
-                </tbody>
+                        <td>
+                           <div class="inline-input-container">
+                              <input type="number" class="br-pct" value="25" min="0" max="100"><span class="unit">%</span>
+                           </div>
+                        </td>
+                        <td>
+                           <div class="inline-input-container"><span class="unit">$</span>
+                              <input type="number" class="br-lim" value="" placeholder="blank" min="0">
+                           </div>
+                        </td>
+                        <td>
+                           <select class="br-ovr">
+                              <option value="true">TRUE</option>
+                              <option value="false" selected>FALSE</option>
+                           </select>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+			   <div style="color: #b38a10;text-align: center;">Set FTADLimit 0 to remove cap on Discount</div>
+            </div>
+         </div>
+         <div class="panel panel-cart-matrix">
+            <h2>Cart Items (assume all product marked/eligible for autoship)</h2>
+            <table id="cart-table">
+               <thead>
+                  <tr>
+                     <th style="width: 24px; text-align: center;">
+                        <input type="checkbox" id="master-toggle" checked title="Select/Deselect All Products">
+                     </th>
+                     <th style="width: 24px; text-align: center;">#</th>
+                     <th>Product Name</th>
+                     <th style="font-weight: 600;">Subtotal</th>
+                     <th>Brand</th>
+                     <th>Product.xp.FTAD</th>
+                     <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedFTAD</th>
+                     <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedMaxLimit</th>
+                     <th>Uncapped Disc.</th>
+                     <th>Final Discount</th>
+					 <th>Total</th>
+                     <th style="text-align: center;">Scaled?</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr data-idx="1" data-brand="Brand A">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">1</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Premium Kibble</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="82">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-a">Brand A</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="2" data-brand="Brand A">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">2</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Rubber Chew Toy</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="57" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-a">Brand A</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="25" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+				  <tr data-idx="3" data-brand="Brand A">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">3</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Earth Paws</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="24" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-a">Brand A</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="4" data-brand="Brand B">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">4</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Organic Catnip</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="100" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-b">Brand B</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="5" data-brand="Brand B">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">5</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Feather Wand</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="50" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-b">Brand B</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="38" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+				  <tr data-idx="6" data-brand="Brand B">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">6</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">SqueakAir Ball</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="50" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-b">Brand B</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="38" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="7" data-brand="Brand C">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">7</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Orthopedic Bed</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="120" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-c">Brand C</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="8" data-brand="Brand C">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">8</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Salmon Bites</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="80" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-c">Brand C</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="30" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+				  <tr data-idx="9" data-brand="Brand C">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">9</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Play On Lamb</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="35" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-c">Brand C</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="30" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="10" data-brand="Brand D">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">10</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Scratching Post</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="65" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-d">Brand D</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="11" data-brand="Brand D">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">11</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Ceramic Fountain</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="40" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-d">Brand D</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="10" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="12" data-brand="Brand E">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">12</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Standard Leash</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="20" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-e">Brand E</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="13" data-brand="Brand E">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">13</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Training Treats</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="40" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-e">Brand E</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="14" data-brand="Brand E">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">14</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">LED Collar</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="60" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-e">Brand E</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="35" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+                  <tr data-idx="15" data-brand="Brand E">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">15</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Grooming Brush</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="140" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-e">Brand E</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+				  <tr data-idx="16" data-brand="Brand F">
+                     <td style="text-align: center;">
+                        <input type="checkbox" class="item-toggle" checked>
+                     </td>
+                     <td style="text-align: center;">16</td>
+                     <td><span class="hover-target product-label"><span class="product-name-text">Freeze Toy</span><span class="popup-pane"></span></span>
+                     </td>
+                     <td style="font-weight: bold;">
+                        <div class="inline-input-container"><span class="unit">$</span>
+                           <input type="number" class="table-input item-sub" value="20" min="0">
+                        </div>
+                     </td>
+                     <td><span class="txt-brand-f">Brand F</span></td>
+                     <td>
+                        <div class="inline-input-container">
+                           <input type="number" class="item-xp" value="5" placeholder="blank" min="0" max="100"><span class="unit">%</span>
+                        </div>
+                     </td>
+                     <td class="scld-col res-pct"></td>
+                     <td class="scld-col res-lim"></td>
+                     <td class="uncap-disc"></td>
+                     <td class="fin-disc"></td><td class="fin-total"></td>
+                     <td style="text-align: center;" class="is-scaled"></td>
+                  </tr>
+               </tbody>
             </table>
-        </div>
-    </div>
-
-    <div class="panel panel-cart-matrix">
-        <h2>Cart Items (assume all product marked/eligible for autoship)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 24px; text-align: center;">#</th>
-                    <th>Product Name</th>
-                    <th style="font-weight: 600;">Subtotal</th>
-                    <th>Brand</th>
-                    <th>Product.xp.FTAD</th>
-                    <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedFTAD</th>
-                    <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedMaxLimit</th>
-                    <th>Uncapped Disc.</th>
-                    <th>Final Discount</th>
-                    <th style="text-align: center;">Scaled?</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="text-align: center;">1</td>
-                    <td>
-                        <span class="hover-target">Premium Kibble
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (15%) wins.</li>
-                                    <li><b>Math:</b> $100.00 × 15% = $15.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Combined Brand A uncapped ($28.75) does not exceed active limit ($30.00).</li>
-                                    <li><b>Constraint Result:</b> Bypasses scaling; full uncapped total applied.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$100.00</td>
-                    <td><span class="txt-brand-a">Brand A</span></td>
-                    <td></td>
-                    <td class="scld-col">15%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="scld-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$15.00</td>
-                    <td style="font-weight: 600;">$15.00</td>
-                    <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">2</td>
-                    <td>
-                        <span class="hover-target">Rubber Chew Toy
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product value (25%) takes absolute top priority.</li>
-                                    <li><b>Math:</b> $55.00 × 25% = $13.75 Uncapped.</li>
-                                    <li><b>Grouping:</b> EnforceBrandOverride == true pools this item with Kibble against the $30.00 limit.</li>
-                                    <li><b>Constraint Result:</b> Group under cap limit; scaling skipped.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$55.00</td>
-                    <td><span class="txt-brand-a">Brand A</span></td>
-                    <td>25%</td>
-                    <td class="scld-col">25%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="scld-col">$30.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$13.75</td>
-                    <td style="font-weight: 600;">$13.75</td>
-                    <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">3</td>
-                    <td>
-                        <span class="hover-target">Organic Catnip
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Evaluated via SKU key boundaries against user history.</li>
-                                    <li><b>Disqualification:</b> Profile flag lookup detects past completed order for <code>Organic Catnip</code>.</li>
-                                    <li><b>Constraint Result:</b> Blocked completely via user cache state loop.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$100.00</td>
-                    <td><span class="txt-brand-b">Brand B</span></td>
-                    <td></td>
-                    <td class="scld-col">0%<span class="src-tag src-tag-none">(NONE)</span></td>
-                    <td class="scld-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$0.00</td>
-                    <td style="color: var(--text-muted); font-weight: 600;">$0.00</td>
-                    <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">4</td>
-                    <td>
-                        <span class="hover-target">Feather Wand
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product value (38%) matches valid limit boundaries.</li>
-                                    <li><b>Math:</b> $50.00 × 38% = $19.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> EnforceBrandOverride == false isolates this line item as a standalone cap.</li>
-                                    <li><b>Constraint Result:</b> $19.00 is safely under the Brand B standalone limit ($50.00). Passes untouched.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$50.00</td>
-                    <td><span class="txt-brand-b">Brand B</span></td>
-                    <td>38%</td>
-                    <td class="scld-col">38%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="scld-col">$50.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$19.00</td>
-                    <td style="font-weight: 600;">$19.00</td>
-                    <td style="text-align: center;"><span class="badge badge-false">FALSE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">5</td>
-                    <td>
-                        <span class="hover-target">Orthopedic Bed
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (20%) active routing.</li>
-                                    <li><b>Math:</b> $120.00 × 20% = $24.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Combined Brand C uncapped ($48.00) breaches the $40.00 limit boundary.</li>
-                                    <li><b>Constraint Result:</b> Proportional scale applied: $40 × ($120 subtotal / $200 pool subtotal) = $24.00.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$120.00</td>
-                    <td><span class="txt-brand-c">Brand C</span></td>
-                    <td></td>
-                    <td class="scld-col">20%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="scld-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$24.00</td>
-                    <td style="font-weight: 600;">$24.00</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">6</td>
-                    <td>
-                        <span class="hover-target">Salmon Bites
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product value (30%) wins priority waterfall.</li>
-                                    <li><b>Math:</b> $80.00 × 30% = $24.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Overridden flag is ignored during shared proportional limit adjustments.</li>
-                                    <li><b>Constraint Result:</b> Proportional scale applied: $40 × ($80 subtotal / $200 pool subtotal) = $16.00.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$80.00</td>
-                    <td><span class="txt-brand-c">Brand C</span></td>
-                    <td>30%</td>
-                    <td class="scld-col">30%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="scld-col">$40.00<span class="src-tag src-tag-b">(B)</span></td>
-                    <td>$24.00</td>
-                    <td style="font-weight: 600;">$16.00</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">7</td>
-                    <td>
-                        <span class="hover-target">Scratching Post
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (25%) wins.</li>
-                                    <li><b>Math:</b> $65.00 × 25% = $16.25 Uncapped.</li>
-                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Default Limit ($25.00).</li>
-                                    <li><b>Constraint Result:</b> Default limits force group distribution: $25 × ($65 line subtotal / $105 pool subtotal) = $15.48.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$65.00</td>
-                    <td><span class="txt-brand-d">Brand D</span></td>
-                    <td></td>
-                    <td class="scld-col">25%<span class="src-tag src-tag-b">(B)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$16.25</td>
-                    <td style="font-weight: 600;">$15.48</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">8</td>
-                    <td>
-                        <span class="hover-target">Ceramic Fountain
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product value (10%) takes precedence.</li>
-									<li><b>Math:</b> $40.00 × 10% = $4.00 Uncapped.</li>											 
-                                    <li><b>Grouping:</b> Override flag (false) is explicitly ignored because a Default limit fallback occurred.</li>
-                                    <li><b>Constraint Result:</b> Proportional scaling triggers: $25 × ($40 line subtotal / $105 pool subtotal) = $9.52.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$40.00</td>
-                    <td><span class="txt-brand-d">Brand D</span></td>
-                    <td>10%</td>
-                    <td class="scld-col">10%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$4.00</td>
-                    <td style="font-weight: 600;">$9.52</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">9</td>
-                    <td>
-                        <span class="hover-target">Standard Leash
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Complete unconfigured brand triggers total Default Baseline Fallback (35%).</li>
-                                    <li><b>Math:</b> $20.00 × 35% = $7.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Missing brand limit triggers forced system fallback to Default Limit ($25.00).</li>
-                                    <li><b>Constraint Result:</b> Scaled against the shared total pool: $25 × ($20 line subtotal / $260 brand total pool subtotal) = $1.92.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$20.00</td>
-                    <td><span class="txt-brand-e">Brand E</span></td>
-                    <td></td>
-                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$7.00</td>
-                    <td style="font-weight: 600;">$1.92</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">10</td>
-                    <td>
-                        <span class="hover-target">Training Treats
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Completely unconfigured brand cascades to Default baseline (35%).</li>
-                                    <li><b>Math:</b> $40.00 × 35% = $14.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Evaluated as part of the shared Brand E fallback constraint cluster.</li>
-                                    <li><b>Constraint Result:</b> Scaled against pool: $25 × ($40 line subtotal / $260 pool subtotal) = $3.85.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$40.00</td>
-                    <td><span class="txt-brand-e">Brand E</span></td>
-                    <td></td>
-                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$14.00</td>
-                    <td style="font-weight: 600;">$3.85</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">11</td>
-                    <td>
-                        <span class="hover-target">LED Collar
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product value (35%) wins priority waterfall.</li>
-                                    <li><b>Math:</b> $60.00 × 35% = $21.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Default limit fallbacks automatically aggregate and scale all valid elements.</li>
-                                    <li><b>Constraint Result:</b> Scaled against pool: $25 × ($60 line subtotal / $260 pool subtotal) = $5.77.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$60.00</td>
-                    <td><span class="txt-brand-e">Brand E</span></td>
-                    <td>35%</td>
-                    <td class="scld-col">35%<span class="src-tag src-tag-p">(P)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$21.00</td>
-                    <td style="font-weight: 600;">$5.77</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">12</td>
-                    <td>
-                        <span class="hover-target">Grooming Brush
-                            <span class="popup-pane">
-                                <h4>Calculation Trace Log</h4>
-                                <ul>
-                                    <li><b>Waterfall Route:</b> Product (null) → Brand Config (null) → Default Default (35%).</li>
-                                    <li><b>Math:</b> $140.00 × 35% = $49.00 Uncapped.</li>
-                                    <li><b>Grouping:</b> Heaviest line element contribution in the unconfigured Brand E bucket pool.</li>
-                                    <li><b>Constraint Result:</b> Scaled against pool: $25 × ($140 line subtotal / $260 pool subtotal) = $13.46.</li>
-                                </ul>
-                            </span>
-                        </span>
-                    </td>
-                    <td style="font-weight: bold;">$140.00</td>
-                    <td><span class="txt-brand-e">Brand E</span></td>
-                    <td></td>
-                    <td class="scld-col">35%<span class="src-tag src-tag-d">(D)</span></td>
-                    <td class="scld-col">$25.00<span class="src-tag src-tag-d">(D)</span></td>
-                    <td>$49.00</td>
-                    <td style="font-weight: 600;">$13.46</td>
-                    <td style="text-align: center;"><span class="badge scld-yes">TRUE</span></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="summary-bar">
-            <div class="summary-item">Cart Subtotal: <span>$890.00</span></div>
-            <div class="summary-item disc">Total Discount Applied: <span>-$163.66</span></div>
-            <div class="summary-item final">Cart Final Total: <span>$726.34</span></div>
-        </div>
-    </div>
-</div>
-
-</body>
+            <div class="summary-bar">
+               <div class="summary-item">Cart Subtotal: <span id="sum-sub">$0.00</span></div>
+               <div class="summary-item disc">Total Discount Applied: <span id="sum-disc">$0.00</span></div>
+               <div class="summary-item final">Cart Final Total: <span id="sum-total">$0.00</span></div>
+            </div>
+         </div>
+      </div>
+      <script>
+         function calculateDashboard() {
+             // 1. Gather Global Default Baselines
+             const defPct = parseFloat(document.getElementById('input-default-pct').value) || 0;
+             const defLim = parseFloat(document.getElementById('input-default-limit').value) || 0;
+         
+             // 2. Map Brand Configuration Layers
+             const brands = {};
+             document.querySelectorAll('#brand-config-table tbody tr').forEach(tr => {
+                 const bName = tr.getAttribute('data-brand');
+                 if (!bName) return;
+                 
+                 const pctVal = tr.querySelector('.br-pct').value;
+                 const limVal = tr.querySelector('.br-lim').value;
+                 
+                 brands[bName] = {
+                     pct: pctVal === "" ? null : parseFloat(pctVal),
+                     lim: limVal === "" ? null : parseFloat(limVal),
+                     ovr: tr.querySelector('.br-ovr').value === 'true'
+                 };
+             });
+             
+         
+             brands['Brand E'] = { pct: null, lim: null, ovr: false };
+             brands['Brand F'] = { pct: null, lim: null, ovr: false };
+             // 3. Process Initial Percentage Cascades and Uncapped Baselines
+             const cartItems = [];
+             let totalCartSubtotal = 0;
+         
+             document.querySelectorAll('#cart-table tbody tr').forEach(tr => {
+                 const idx = tr.getAttribute('data-idx');
+         
+         																										 
+                 const nameEl = tr.querySelector('.product-name-text');
+                 const pName = nameEl ? nameEl.textContent.trim() : 'Unknown Product';
+         
+                 const subtotal = parseFloat(tr.querySelector('.item-sub').value) || 0;
+                 const brandName = tr.getAttribute('data-brand');
+                 const xpPctVal = tr.querySelector('.item-xp').value;
+                 const xpPct = xpPctVal === "" ? null : parseFloat(xpPctVal);
+                 
+                 // Read inclusion toggle checkbox state
+                 const isChecked = tr.querySelector('.item-toggle').checked;
+         
+                 if (!isChecked) {
+                     // Apply visual exclusion cross-out class hook state to tr wrapper row
+                     tr.classList.add('line-excluded');
+                     
+                     // Clear row metrics indicators instantly in markup view context
+                     tr.querySelector('.res-pct').innerHTML = "—";
+                     tr.querySelector('.res-lim').innerHTML = "—";
+                     tr.querySelector('.uncap-disc').textContent = "—";
+                     tr.querySelector('.fin-disc').textContent = "—";
+					 tr.querySelector('.fin-total').textContent = "—";
+                     tr.querySelector('.is-scaled').innerHTML = "—";
+                     
+                     // Hydrate targeted "Excluded from Cart" trace popup string text payload
+                     tr.querySelector('.popup-pane').innerHTML = `
+                         <h4>Calculation Trace Log</h4>
+                         <p style="color:var(--danger); font-weight:bold; margin:4px 0 0 0;">Excluded from Cart</p>
+                     `;
+                     return; // Cease tracking processing cycles completely for this dropped node loop
+                 }
+         
+                 // Normal inclusion execution trail path sequence
+                 tr.classList.remove('line-excluded');
+                 totalCartSubtotal += subtotal;
+         
+                 let resolvedPct = 0;
+                 let srcPctTag = '';
+         
+         
+                 if (xpPct !== null) {
+                     resolvedPct = xpPct;
+                     srcPctTag = 'P';
+                 } else if (brands[brandName] && brands[brandName].pct !== null) {
+                     resolvedPct = brands[brandName].pct;
+                     srcPctTag = 'B';
+                 } else {
+                     resolvedPct = defPct;
+                     srcPctTag = 'D';
+                 }
+         
+         
+                 if (pName === "Organic Catnip") {
+                     resolvedPct = 0;
+                     srcPctTag = 'NONE';
+                 }
+         
+                 const uncappedDiscount = (subtotal * resolvedPct) / 100;
+         
+                 cartItems.push({
+                     tr, idx, pName, subtotal, brandName, xpPct, resolvedPct, srcPctTag, uncappedDiscount,
+                     finalDiscount: 0, resLimitStr: '', resLimitSrc: '', isScaled: false, zeroLimitRule: false
+                 });
+             });
+         
+             // 4. Group and Scale limits based on Brand Bucket groupings
+             const brandPools = {};
+             cartItems.forEach(item => {
+                 if (!brandPools[item.brandName]) {
+                     brandPools[item.brandName] = { items: [], totalSubtotal: 0, totalUncapped: 0 };
+                 }
+                 brandPools[item.brandName].items.push(item);
+                 brandPools[item.brandName].totalSubtotal += item.subtotal;
+                 brandPools[item.brandName].totalUncapped += item.uncappedDiscount;
+             });
+         
+             Object.keys(brandPools).forEach(bName => {
+                 const pool = brandPools[bName];
+                 const config = brands[bName];
+         
+         
+                 let activeLimit = 0;
+                 let limitSrc = '';
+                 let fallbackTriggered = false;
+         
+                 if (config.lim !== null) {
+                     activeLimit = config.lim;
+                     limitSrc = 'B';
+                 } else {
+                     activeLimit = defLim;
+                     limitSrc = 'D';
+                     fallbackTriggered = true;
+                 }
+         
+         																													   
+                 if (activeLimit === 0) {
+                     pool.items.forEach(item => {
+                         item.resLimitStr = `$0.00`;
+                         item.resLimitSrc = limitSrc;
+                         item.isScaled = false;
+                         item.finalDiscount = item.uncappedDiscount;
+                         item.zeroLimitRule = true;
+                     });
+                     return;
+                 }
+         
+         
+                 const isSharedPool = config.ovr || fallbackTriggered;
+         
+                 if (isSharedPool) {
+                     const limitStr = `$${activeLimit.toFixed(2)}`;
+                     const exceedsCap = pool.totalUncapped > activeLimit;
+         
+                     pool.items.forEach(item => {
+                         item.resLimitStr = limitStr;
+                         item.resLimitSrc = limitSrc;
+         
+                         if (exceedsCap) {
+                             item.isScaled = true;
+         
+                             if (pool.totalSubtotal > 0) {
+                                 item.finalDiscount = activeLimit * (item.subtotal / pool.totalSubtotal);
+                             } else {
+                                 item.finalDiscount = 0;
+                             }
+                         } else {
+                             item.isScaled = false;
+                             item.finalDiscount = item.uncappedDiscount;
+                         }
+                     });
+                 } else {
+         
+                     pool.items.forEach(item => {
+                         item.resLimitStr = `$${activeLimit.toFixed(2)}`;
+                         item.resLimitSrc = limitSrc;
+         
+                         if (item.uncappedDiscount > activeLimit) {
+                             item.finalDiscount = activeLimit;
+                             item.isScaled = true;
+                         } else {
+                             item.finalDiscount = item.uncappedDiscount;
+                             item.isScaled = false;
+                         }
+                     });
+                 }
+             });
+         
+             // 5. Hydrate UI DOM Nodes and regenerate reactive Trace Logs
+             let totalDiscountApplied = 0;
+         
+             cartItems.forEach(item => {
+                 totalDiscountApplied += item.finalDiscount;
+         
+         
+                 item.tr.querySelector('.res-pct').innerHTML = `${item.resolvedPct}%<span class="src-tag src-tag-${item.srcPctTag.toLowerCase()}">(${item.srcPctTag})</span>`;
+                 item.tr.querySelector('.res-lim').innerHTML = `${item.resLimitStr}<span class="src-tag src-tag-${item.resLimitSrc.toLowerCase()}">(${item.resLimitSrc})</span>`;
+                 item.tr.querySelector('.uncap-disc').textContent = `$${item.uncappedDiscount.toFixed(2)}`;
+                 item.tr.querySelector('.fin-disc').textContent = `$${item.finalDiscount.toFixed(2)}`;
+                 item.tr.querySelector('.fin-total').textContent = `$${(item.subtotal - item.finalDiscount).toFixed(2)}`;
+				 
+                 const badgeClass = item.isScaled ? 'badge scld-yes' : 'badge badge-false';
+                 item.tr.querySelector('.is-scaled').innerHTML = `<span class="${badgeClass}">${item.isScaled ? 'TRUE' : 'FALSE'}</span>`;
+         
+         
+                 let waterfallExplanation = '';
+                 if (item.pName === "Organic Catnip") {
+                     waterfallExplanation = `Profile history lookup detects prior usage exception rules. Processed at 0%.`;
+                 } else if (item.xpPct !== null) {
+                     waterfallExplanation = `Custom Product value override (${item.xpPct}%) wins priority waterfall routing.`;
+                 } else if (brands[item.brandName] && brands[item.brandName].pct !== null) {
+                     waterfallExplanation = `Product layout parameter empty (null). Brand Config profile override setting applied instead.`;
+                 } else {
+                     waterfallExplanation = `No itemized product or brand parameters matched. Cascaded to Default Value baseline stack.`;
+                 }
+         
+                 let capExplanation = '';
+                 const isShared = brands[item.brandName].ovr || (brands[item.brandName].lim === null);
+                 
+                 if (item.zeroLimitRule) {
+                     capExplanation = `Cap scaling is bypassed because the matched limit evaluates to exactly zero.`;
+                 } else if (item.pName === "Organic Catnip") {
+                     capExplanation = `Row discount zeroed out; boundary scaling skipped.`;
+                 } else if (isShared) {
+                     if (item.isScaled) {
+                         capExplanation = `Combined brand budget pool limit (${item.resLimitStr}) exceeded. Proportional scale distribution rule executed.`;
+                     } else {
+                         capExplanation = `Combined brand pool under limit threshold. Applied uncapped calculation directly.`;
+                     }
+                 } else {
+                     if (item.isScaled) {
+                         capExplanation = `Individual line exceeded standlone row cap ceiling threshold ($${brands[item.brandName].lim.toFixed(2)}). Bounded to floor limit.`;
+                     } else {
+                         capExplanation = `Row value safely below independent constraint. Standalone ceiling limit bypass applied.`;
+                     }
+                 }
+         
+                 item.tr.querySelector('.popup-pane').innerHTML = `
+                     <h4>Calculation Trace Log</h4>
+                     <ul>
+                         <li><b>Waterfall Route:</b> ${waterfallExplanation}</li>
+                         <li><b>Math:</b> $${item.subtotal.toFixed(2)} × ${item.resolvedPct}% = $${item.uncappedDiscount.toFixed(2)} Uncapped.</li>
+                         <li><b>Cap Resolution:</b> ${capExplanation}</li>
+                     </ul>
+                 `;
+             });
+         
+             // 6. Final Global Totals Render
+             const finalTotal = totalCartSubtotal - totalDiscountApplied;
+             document.getElementById('sum-sub').textContent = `$${totalCartSubtotal.toFixed(2)}`;
+             document.getElementById('sum-disc').textContent = `-$${totalDiscountApplied.toFixed(2)}`;
+             document.getElementById('sum-total').textContent = `$${finalTotal.toFixed(2)}`;
+         }
+         
+         // Master Toggle Checkbox Listener Functionality
+         document.getElementById('master-toggle').addEventListener('change', function(e) {
+             const checkedState = e.target.checked;
+             document.querySelectorAll('.item-toggle').forEach(cb => {
+                 cb.checked = checkedState; 
+         								 
+             });
+             calculateDashboard();
+         });
+         
+         // Bind event listeners to both inputs and dynamic toggle checkboxes
+         document.querySelectorAll('input, select').forEach(element => {
+             element.addEventListener('input', calculateDashboard);
+         });
+         
+         																							 
+         window.addEventListener('DOMContentLoaded', calculateDashboard);
+      </script>
+   </body>
 </html>
