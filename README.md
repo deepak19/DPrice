@@ -1,1 +1,1 @@
-# Differentiated Pricing Simulator
+# Simulator
