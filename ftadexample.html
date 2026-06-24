@@ -89,8 +89,13 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.04);
             opacity: 0;
             transform: translateY(15px);
+		    position: relative;
         }
 
+        /* Prevent parent container stacking conflicts during an active image modal preview hover */
+        .panel:has(.img-trigger:hover) {
+            z-index: 50;
+        } 
         .panel-configs-left {
             animation: slideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
         }
@@ -173,6 +178,78 @@
         .txt-brand-c { color: var(--brand-c-color); font-weight: bold; }
         .txt-brand-d { color: var(--brand-d-color); font-weight: bold; }
         .txt-brand-e { color: var(--brand-e-color); font-weight: bold; }
+
+        /* Title with Interactive Link Trigger Wrapper */
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+        .title-container h2 {
+            margin: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        /* Interactive Image Link popup trigger button */
+        .img-trigger {
+            font-size: 11px;
+            color: var(--primary);
+            text-decoration: none;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .img-trigger:hover {
+            background: #dbeafe;
+        }
+
+        /* Image link popup layout panel container */
+        .img-trigger .img-popup-pane {
+            visibility: hidden;
+            width: 420px;
+            background-color: #0f172a;
+            color: #f1f5f9;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            top: 125%;
+            right: 0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s ease;
+        }
+        .img-trigger .img-popup-pane h4 {
+            margin: 0 0 6px 0;
+            font-size: 12px;
+            color: #38bdf8;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 2px;
+        }
+        .img-trigger .img-popup-pane img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background: #1e293b;
+            display: block;
+        }
+        .img-trigger:hover .img-popup-pane {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* CSS Tooltip/Popup Structure */
         .hover-target {
@@ -289,7 +366,15 @@
         </div>
 
         <div class="panel panel-configs-right">
-            <h2>Sitecore Brand Config</h2>
+            <div class="title-container">
+                <h2>Sitecore Brand Config</h2>
+                <span class="img-trigger">ⓘ View Schema
+                    <span class="img-popup-pane">
+                        <h4>Sitecore Brand Configuration</h4>
+                        <img src="https://i.postimg.cc/nzJhZ4nB/image.png?auto=format&fit=crop&w=400&q=80" alt="Brand config">
+                    </span>
+                </span>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -522,7 +607,7 @@
                                 <h4>Calculation Trace Log</h4>
                                 <ul>
                                     <li><b>Waterfall Route:</b> Product value (10%) takes precedence.</li>
-                                    <li><b>Math:</b> $40.00 × 10% = $4.00 Uncapped.</li>
+									<li><b>Math:</b> $40.00 × 10% = $4.00 Uncapped.</li>											 
                                     <li><b>Grouping:</b> Override flag (false) is explicitly ignored because a Default limit fallback occurred.</li>
                                     <li><b>Constraint Result:</b> Proportional scaling triggers: $25 × ($40 line subtotal / $105 pool subtotal) = $9.52.</li>
                                 </ul>
