@@ -16,7 +16,6 @@
          --warning: #f59e0b;
          --danger: #ef4444;
          /* Explicit Requested Sources Palette */
-         --color-src-p: #2563eb;
          --color-src-b: #167037;
          --color-src-g: #ea580c;
          /* Distinguishable Brand Specific Color Codes */
@@ -203,7 +202,6 @@
          .scld-col { font-family: monospace; font-weight: 600; color: #475569; background-color: #fcfcfc; }
          /* Inline Tag Rules with Custom Request Values */
          .src-tag { font-weight: bold; font-size: 12px; margin-left: 3px; }
-         .src-tag-p { color: var(--color-src-p); }
          .src-tag-b { color: var(--color-src-b); }
          .src-tag-d { color: var(--color-src-g); }
          .src-tag-none { color: #64748b; }
@@ -358,12 +356,11 @@
    <body>
       <div class="container">
          <header>
-            <h1>FTAD Example Cart</h1>
+            <h1>FTAD Cart Simulation</h1>
             <p class="meta-subtitle">Simulation — Boundary Verification & Shared Cap Allocations</p>
          </header>
          <div class="legend-box">
             <span class="legend-title">Waterfall Source Mapping:</span>
-            <span class="legend-item"><span class="src-tag src-tag-p legend-badge">(P)</span> Product Value</span>
             <span class="legend-item"><span class="src-tag src-tag-b legend-badge">(B)</span> Brand Configuration</span>
             <span class="legend-item"><span class="src-tag src-tag-d legend-badge">(D)</span> Default Value</span>
          </div>
@@ -512,7 +509,6 @@
                      <th>Product Name</th>
                      <th style="font-weight: 600;">Subtotal</th>
                      <th>Brand</th>
-                     <th>Product.xp.FTAD</th>
                      <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedFTAD</th>
                      <th class="scld-col" style="background-color: #edf2f7; color: #2d3748;">ResolvedMaxLimit</th>
                      <th>Uncapped Disc.</th>
@@ -535,11 +531,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-a">Brand A</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -559,11 +550,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-a">Brand A</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="25" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -583,11 +569,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-a">Brand A</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -607,11 +588,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-b">Brand B</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -631,11 +607,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-b">Brand B</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="38" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -655,11 +626,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-b">Brand B</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="38" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -679,11 +645,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-c">Brand C</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -703,11 +664,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-c">Brand C</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="30" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -727,11 +683,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-c">Brand C</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="30" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -751,11 +702,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-d">Brand D</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -775,11 +721,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-d">Brand D</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="10" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -799,11 +740,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-e">Brand E</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -823,11 +759,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-e">Brand E</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -847,11 +778,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-e">Brand E</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="35" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -871,11 +797,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-e">Brand E</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -895,11 +816,6 @@
                         </div>
                      </td>
                      <td><span class="txt-brand-f">Brand F</span></td>
-                     <td>
-                        <div class="inline-input-container">
-                           <input type="number" class="item-xp" value="5" min="0" max="100"><span class="unit">%</span>
-                        </div>
-                     </td>
                      <td class="scld-col res-pct"></td>
                      <td class="scld-col res-lim"></td>
                      <td class="uncap-disc"></td>
@@ -953,8 +869,6 @@
          
                  const subtotal = parseFloat(tr.querySelector('.item-sub').value) || 0;
                  const brandName = tr.getAttribute('data-brand');
-                 const xpPctVal = tr.querySelector('.item-xp').value;
-                 const xpPct = xpPctVal === "" ? null : parseFloat(xpPctVal);
                  
                  // Read inclusion toggle checkbox state
                  const isChecked = tr.querySelector('.item-toggle').checked;
@@ -987,10 +901,7 @@
                  let srcPctTag = '';
          
          
-                 if (xpPct !== null) {
-                     resolvedPct = xpPct;
-                     srcPctTag = 'P';
-                 } else if (brands[brandName] && brands[brandName].pct !== null) {
+                 if (brands[brandName] && brands[brandName].pct !== null) {
                      resolvedPct = brands[brandName].pct;
                      srcPctTag = 'B';
                  } else {
@@ -1007,7 +918,7 @@
                  const uncappedDiscount = (subtotal * resolvedPct) / 100;
          
                  cartItems.push({
-                     tr, idx, pName, subtotal, brandName, xpPct, resolvedPct, srcPctTag, uncappedDiscount,
+                     tr, idx, pName, subtotal, brandName, resolvedPct, srcPctTag, uncappedDiscount,
                      finalDiscount: 0, resLimitStr: '', resLimitSrc: '', isScaled: false, zeroLimitRule: false
                  });
              });
@@ -1113,13 +1024,11 @@
          
                  let waterfallExplanation = '';
                  if (item.pName === "Organic Catnip") {
-                     waterfallExplanation = `Profile history lookup detects prior usage exception rules. Processed at 0%.`;
-                 } else if (item.xpPct !== null) {
-                     waterfallExplanation = `Custom Product value override (${item.xpPct}%) wins priority waterfall routing.`;
+                     waterfallExplanation = `Profile history lookup detects , this product already avalied FTAD. Hence Discount is 0%.`;
                  } else if (brands[item.brandName] && brands[item.brandName].pct !== null) {
-                     waterfallExplanation = `Product layout parameter empty (null). Brand Config profile override setting applied instead.`;
+                     waterfallExplanation = `Brand Config profile override percent applied.`;
                  } else {
-                     waterfallExplanation = `No itemized product or brand parameters matched. Cascaded to Default Value baseline stack.`;
+                     waterfallExplanation = `No brand parameters matched. Cascaded to Default Value baseline stack.`;
                  }
          
                  let capExplanation = '';

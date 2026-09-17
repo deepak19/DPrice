@@ -1,6 +1,5 @@
 :root {
     --primary: #16a34a;
-    --product: #2563eb;
     --brand: #167037;
     --global: #ea580c;
 
@@ -81,12 +80,6 @@ header p {
     gap: 16px;
 }
 
-.config-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
 /* CARD */
 
 .card {
@@ -113,7 +106,6 @@ header p {
     border-radius: 999px;
 }
 
-.tag-product { background: var(--product); }
 .tag-brand { background: var(--brand); }
 .tag-global { background: var(--global); }
 
@@ -219,9 +211,9 @@ hr {
     border-top: 1px solid var(--border);
 }
 
+
 /* source-indicator */
 
-.source-indicator.src-P{ background: var(--product); }
 .source-indicator.src-B{ background: var(--brand); }
 .source-indicator.src-G{ background: var(--global); }
 
@@ -231,10 +223,6 @@ hr {
 @media (max-width: 992px) {
 
     .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .config-grid {
         grid-template-columns: 1fr;
     }
 
