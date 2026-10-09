@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autoship Engine Rule Showcase</title>
+    <title>Autoship Discount Configuration Simulator</title>
     <link rel="stylesheet" href="autoshipdiscount.css">
 </head>
 <body>
@@ -16,235 +16,106 @@
         </a>
 
         <div class="header-content">
-            <h1>Autoship Engine Rule Showcase</h1>
+            <h1>Autoship Discount Configuration Simulator</h1>
             <p>
-                Interactive playground visualizing configuration priority cascades,
-                brand overrides and metrics variation.
+                Edit the Default item and the Purina brand item (template AutoShip Discount Brand),
+                then see the resolved FTAD, RAD and Max Discount for a product.
             </p>
         </div>
     </header>
 
     <div class="grid">
 
-        <!-- LEFT COLUMN -->
-        <div class="space-y">
-
-            <!-- BRAND -->
-            <div class="card">
-                <h2>
-                    🏷️ Brand Layer
-                    <span class="section-tag tag-brand">Priority 1</span>
-                </h2>
-
-                <div class="form-group">
-                    <label for="brandStartDate">
-                        Start Date
-                    </label>
-
-                    <input type="date"
-                           id="brandStartDate"
-                           class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="brandEndDate">
-                        End Date
-                    </label>
-
-                    <input type="date"
-                           id="brandEndDate"
-                           class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="brandFtadPercent">
-                        Brand FTAD Percent (%)
-                    </label>
-
-                    <input type="number"
-                           id="brandFtadPercent"
-                           class="form-control"
-                           min="0"
-                           max="100">
-                </div>
-
-                <div class="form-group">
-                    <label for="brandFtadLimit">
-                        Brand Max Limit ($)
-                    </label>
-
-                    <input type="number"
-                           id="brandFtadLimit"
-                           class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="brandRecPercent">
-                        Brand Recurring Percent (%)
-                    </label>
-
-                    <input type="number"
-                           id="brandRecPercent"
-                           class="form-control"
-                           min="0"
-                           max="100">
-                </div>
-
-                <div class="checkbox-group">
-                    <input type="checkbox"
-                           id="ftadPerBrand">
-
-                    <div>
-                        <label style="font-weight: 700" for="ftadPerBrand">
-                            FTADPerBrand
-                        </label>
-
-                        <div class="help-text">
-                            FTADPerBrand: A Sitecore checkbox field will enable authors to configure FTAD enforcement at the brand level rather than the default SKU level.
-                        </div>
-                    </div>
-                </div>
+        <!-- LEFT: CONTENT TREE -->
+        <aside class="card tree-card">
+            <h2>🌳 Content Tree</h2>
+            <ul class="tree" id="tree"></ul>
+            <div class="tree-note">
+                Both items use the template
+                <strong>AutoShip Discount Brand</strong>.
             </div>
+        </aside>
 
-            <!-- GLOBAL -->
-            <div class="card">
-                <h2>
-                    ⚙️ System Baseline
-                    <span class="section-tag tag-global">Priority 2</span>
-                </h2>
+        <!-- CENTRE: ITEM EDITOR -->
+        <main>
+            <div class="card" id="editor"></div>
+        </main>
 
-                <div class="form-group">
-                    <label for="globalFtadPercent">
-                        Default FTAD Percent (%)
-                    </label>
-
-                    <input type="number"
-                           id="globalFtadPercent"
-                           class="form-control"
-                           value="35">
-                </div>
-
-                <div class="form-group">
-                    <label for="globalFtadLimit">
-                        Default Max Limit ($)
-                    </label>
-
-                    <input type="number"
-                           id="globalFtadLimit"
-                           class="form-control"
-                           value="25">
-                </div>
-
-                <div class="form-group">
-                    <label for="globalRecPercent">
-                        Default Recurring Percent (%)
-                    </label>
-
-                    <input type="number"
-                           id="globalRecPercent"
-                           class="form-control"
-                           value="5">
-                </div>
-            </div>
-
-        </div>
-
-        <!-- RIGHT COLUMN -->
+        <!-- RIGHT: SUMMARY -->
         <div>
 
             <div class="card sticky">
 
                 <h2>📊 Resolved Output Summary</h2>
 
-                <div id="eligibilityNotice"
-                     class="eligibility-notice">
+                <div class="form-group">
+                    <label for="productBrand">Product xp.Brand</label>
+                    <input type="text"
+                           id="productBrand"
+                           class="form-control"
+                           value="Purina"
+                           placeholder="Leave empty for a product with no Brand">
+                    <div class="field-help">
+                        The Brand item applies only when this matches its Brand Name (case-insensitive).
+                    </div>
                 </div>
+
+                <div id="appliedNotice" class="applied-notice"></div>
 
                 <div class="results-container">
 
                     <div>
-                        <h3 class="path-title">
-                            🛒 Checkout Path
-                        </h3>
+                        <h3 class="path-title">🛒 Checkout Path</h3>
 
                         <div class="result-badge">
                             <div>
-                                <span class="result-title">
-                                    FTAD Percent
-                                </span>
-
-                                <span class="result-val"
-                                      id="outFtadPercent">
-                                    0%
-                                </span>
+                                <span class="result-title">FTAD Percent</span>
+                                <span class="result-val" id="outFTADPercent">-</span>
+                                <span class="result-note" id="noteFTADPercent"></span>
                             </div>
-
-                            <span class="source-indicator"
-                                  id="srcFtadPercent">
-                                None
-                            </span>
+                            <span class="source-indicator" id="srcFTADPercent">N/A</span>
                         </div>
 
                         <div class="result-badge mt">
                             <div>
-                                <span class="result-title">
-                                    Max Limit
-                                </span>
-
-                                <span class="result-val"
-                                      id="outFtadLimit">
-                                    $0.00
-                                </span>
+                                <span class="result-title">Max Discount (per Brand, per order)</span>
+                                <span class="result-val" id="outMaxLimit">-</span>
+                                <span class="result-note" id="noteMaxLimit"></span>
                             </div>
-
-                            <span class="source-indicator"
-                                  id="srcFtadLimit">
-                                None
-                            </span>
+                            <span class="source-indicator" id="srcMaxLimit">N/A</span>
                         </div>
                     </div>
 
                     <hr>
 
                     <div>
-                        <h3 class="path-title">
-                            🔄 Recurring Order
-                        </h3>
+                        <h3 class="path-title">🔄 Recurring Order</h3>
 
                         <div class="result-badge">
                             <div>
-                                <span class="result-title">
-                                    RAD Percent
-                                </span>
-
-                                <span class="result-val"
-                                      id="outRadPercent">
-                                    0%
-                                </span>
+                                <span class="result-title">RAD Percent (not capped)</span>
+                                <span class="result-val" id="outRADPercent">-</span>
+                                <span class="result-note" id="noteRADPercent"></span>
                             </div>
-
-                            <span class="source-indicator"
-                                  id="srcRadPercent">
-                                None
-                            </span>
+                            <span class="source-indicator" id="srcRADPercent">N/A</span>
                         </div>
+                    </div>
+
+                    <div class="legend">
+                        <span class="source-indicator src-B">Brand (B)</span>
+                        <span class="source-indicator src-D">Default (D)</span>
+                        <span class="source-indicator src-H">Hard-coded (H)</span>
                     </div>
 
                 </div>
 
             </div>
-			
-			<div class="card sticky" style="margin-top: 16px;">
-			<a href="ftadexample.html" target="_blank" style="font-size: 16px; color: inherit; text-decoration: inherit;">
-            Show An Example &#8594;
-			</a>
-			</div>
+
+
 
         </div>
 
     </div>
-
-    
 
 </div>
 
