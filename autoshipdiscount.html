@@ -19,7 +19,7 @@
             <h1>Autoship Discount Configuration Simulator</h1>
             <p>
                 Edit the Default item and the Purina brand item (template AutoShip Discount Brand),
-                then see the resolved FTAD, RAD and Max Discount for a product.
+                then see the resolved FTAD, RAD, Max Discount and FTAD Scope for a product.
             </p>
         </div>
     </header>
@@ -27,13 +27,16 @@
     <div class="grid">
 
         <!-- LEFT: CONTENT TREE -->
-        <aside class="card tree-card">
+        <aside>
+            <div class="card tree-card">
             <h2>🌳 Content Tree</h2>
             <ul class="tree" id="tree"></ul>
             <div class="tree-note">
                 Both items use the template
                 <strong>AutoShip Discount Brand</strong>.
             </div>
+            </div>
+            <button type="button" class="btn-rules" id="btn-rules">Business Rules</button>
         </aside>
 
         <!-- CENTRE: ITEM EDITOR -->
@@ -61,6 +64,7 @@
                 </div>
 
                 <div id="appliedNotice" class="applied-notice"></div>
+                <div id="eligibilityNotice" class="eligibility-notice"></div>
 
                 <div class="results-container">
 
@@ -83,6 +87,15 @@
                                 <span class="result-note" id="noteMaxLimit"></span>
                             </div>
                             <span class="source-indicator" id="srcMaxLimit">N/A</span>
+                        </div>
+
+                        <div class="result-badge mt">
+                            <div>
+                                <span class="result-title">FTAD Scope</span>
+                                <span class="result-val" id="outFTADScope">-</span>
+                                <span class="result-note" id="noteFTADScope"></span>
+                            </div>
+                            <span class="source-indicator" id="srcFTADScope">N/A</span>
                         </div>
                     </div>
 
@@ -111,12 +124,43 @@
 
             </div>
 
-
+            <div class="card sticky" style="margin-top: 16px;">
+                <a href="ftadexample.html" target="_blank" style="font-size: 16px; color: inherit; text-decoration: inherit;">
+                    Show An Example &#8594;
+                </a>
+            </div>
 
         </div>
 
     </div>
 
+</div>
+
+
+<!-- BUSINESS RULES POPUP -->
+<div class="modal-overlay" id="rules-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+        <div class="modal-head">
+            <h2 id="rules-title">Business Rules</h2>
+            <button type="button" class="modal-close" id="rules-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul class="rules-list">
+                    <li><strong>Guests:</strong> guests get no FTAD/RAD.</li>
+                    <li><strong>FTAD, default:</strong> an eligible SKU gets FTAD once per user.</li>
+                    <li><strong>FTAD, Brand scope (<code>FTADScope = BRAND</code>):</strong> FTAD is once per user per Brand. Every eligible SKU of that Brand in the same order gets FTAD. After checkout, no SKU of that Brand gets FTAD again.</li>
+                    <li><strong>No Brand:</strong> a product with no <code>xp.Brand</code> uses the default values and SKU scope.</li>
+                    <li>Brand specific FTAD, RAD, MaxLimit can be optionally configured in sitecore.</li>
+                    <li>MaxLimit is only meant for FTAD.</li>
+                    <li><strong>Fallback:</strong> FTAD %, RAD % and MaxLimit each fall back to the default on their own when the Brand value is empty in sitecore.</li>
+                    <li><strong>MaxLimit:</strong> it caps the total FTAD of one Brand in one order. Products with no Brand form one group that uses the default cap. A MaxLimit of 0 means no cap. The order's FTAD is the sum of the capped groups.</li>
+                    <li><strong>Over the cap:</strong> every line in the Brand is scaled by cap / total, and the rounded amounts add up exactly to the cap.</li>
+                    <li><strong>RAD:</strong> it applies only on recurring orders, to flagged lines, at the Brand RAD or the default.</li>
+                    <li><strong>No backfill:</strong> history starts empty at release.</li>
+                    <li><strong>Cancel or Substitution:</strong> cancelling an order or substituting a product before shipping should reset product's/brand's specific history.</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <script src="autoshipdiscount.js"></script>

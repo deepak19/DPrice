@@ -3,7 +3,6 @@
     --brand: #167037;
     --global: #ea580c;
     --hard: #6b7280;
-    --rule: #475569;
 
     --text: #1f2937;
     --muted: #6b7280;
@@ -468,7 +467,6 @@ hr {
 .source-indicator.src-B { background: var(--brand); }
 .source-indicator.src-D { background: var(--global); }
 .source-indicator.src-H { background: var(--hard); }
-.source-indicator.src-R { background: var(--rule); }
 
 /* MOBILE */
 
@@ -512,4 +510,104 @@ hr {
         align-items: flex-start;
         gap: 8px;
     }
+}
+
+
+/* BUSINESS RULES BUTTON + POPUP */
+
+.btn-rules {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fff;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-rules:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(17, 24, 39, .55);
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal {
+    width: 100%;
+    max-width: 720px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.3);
+    overflow: hidden;
+}
+
+.modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #111827;
+    color: #fff;
+}
+
+.modal-head h2 {
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .8;
+}
+
+.modal-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 16px 22px 20px;
+    overflow-y: auto;
+}
+
+.rules-list {
+    padding-left: 18px;
+}
+
+.rules-list li {
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.rules-list code {
+    background: #f1f5f9;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
 }
