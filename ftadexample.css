@@ -811,3 +811,81 @@ tr.line-excluded select {
     border-radius: 4px;
     font-size: 12px;
 }
+
+
+/* ---------- Brand active window (StartDate / EndDate) ---------- */
+
+.sc-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.status-pill {
+    font-size: 0.68rem;
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.status-pill.st-active { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+.status-pill.st-notstarted { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+.status-pill.st-expired { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+.status-pill.st-nostart,
+.status-pill.st-badrange { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+.tree-node.item.inactive .tree-label {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.tree-node.item.inactive .tree-dot {
+    background: #cbd5e1;
+}
+
+.date-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.date-row .form-control,
+.date-row .date-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.date-input {
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.btn-today {
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-today:hover { background: #f1f5f9; }
+
+.sim-date {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+}

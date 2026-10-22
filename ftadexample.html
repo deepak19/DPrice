@@ -63,6 +63,8 @@
             in the order gets FTAD, and no product of that Brand gets FTAD on the next order.
             Each order that gives FTAD adds its SKUs to the Brand's list, so changing a Brand's scope
             (SKU to BRAND or BRAND to SKU) keeps working. The "FTAD used" tick edits the history in the row's scope.
+            A Brand item applies only while the current date is on or after its Start Date and before its End Date;
+            outside that window its products use the Default item and SKU scope.
         </div>
 
         <div class="history-bar">
@@ -71,6 +73,13 @@
                 <pre class="json-box" id="hist-json"></pre>
             </div>
             <div class="hist-actions">
+                <div class="sim-date">
+                    <label for="currentDate">Current date (simulated)</label>
+                    <div class="date-row">
+                        <input type="date" id="currentDate" class="date-input">
+                        <button type="button" class="btn-today" id="btn-today">Today</button>
+                    </div>
+                </div>
                 <button type="button" class="btn btn-primary" id="btn-checkout">Place order (checkout)</button>
                 <button type="button" class="btn" id="btn-reset">Reset history</button>
             </div>
@@ -143,6 +152,7 @@
                     <li><strong>Guests:</strong> guests get no FTAD/RAD.</li>
                     <li><strong>FTAD, default:</strong> an eligible SKU gets FTAD once per user.</li>
                     <li><strong>FTAD, Brand scope (<code>FTADScope = BRAND</code>):</strong> FTAD is once per user per Brand. Every eligible SKU of that Brand in the same order gets FTAD. After checkout, no SKU of that Brand gets FTAD again.</li>
+                    <li><strong>Active window:</strong> every Brand item has a mandatory <code>StartDate</code> (default 01-01-2026) and an optional <code>EndDate</code>. The Brand item applies only when current date &ge; <code>StartDate</code>, and it becomes inactive when current date &ge; <code>EndDate</code>. An inactive Brand item is ignored: its products use the default values and SKU scope. The Default item is always active.</li>
                     <li><strong>No Brand:</strong> a product with no <code>xp.Brand</code> uses the default values and SKU scope.</li>
                     <li>Brand specific FTAD, RAD, MaxLimit can be optionally configured in sitecore.</li>
                     <li>MaxLimit is only meant for FTAD.</li>

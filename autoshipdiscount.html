@@ -19,7 +19,7 @@
             <h1>Autoship Discount Configuration Simulator</h1>
             <p>
                 Edit the Default item and the Purina brand item (template AutoShip Discount Brand),
-                then see the resolved FTAD, RAD, Max Discount and FTAD Scope for a product.
+                then see the resolved FTAD, RAD, Max Discount and FTAD Scope for a product. A Brand item applies only between its Start Date and End Date.
             </p>
         </div>
     </header>
@@ -50,6 +50,17 @@
             <div class="card sticky">
 
                 <h2>📊 Resolved Output Summary</h2>
+
+                <div class="form-group">
+                    <label for="currentDate">Current date (simulated)</label>
+                    <div class="date-row">
+                        <input type="date" id="currentDate" class="form-control">
+                        <button type="button" class="btn-today" id="btn-today">Today</button>
+                    </div>
+                    <div class="field-help">
+                        The Brand item applies only when this date is &ge; its Start Date and &lt; its End Date (if set).
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="productBrand">Product xp.Brand</label>
@@ -149,6 +160,7 @@
                     <li><strong>Guests:</strong> guests get no FTAD/RAD.</li>
                     <li><strong>FTAD, default:</strong> an eligible SKU gets FTAD once per user.</li>
                     <li><strong>FTAD, Brand scope (<code>FTADScope = BRAND</code>):</strong> FTAD is once per user per Brand. Every eligible SKU of that Brand in the same order gets FTAD. After checkout, no SKU of that Brand gets FTAD again.</li>
+                    <li><strong>Active window:</strong> every Brand item has a mandatory <code>StartDate</code> (default 01-01-2026) and an optional <code>EndDate</code>. The Brand item applies only when current date &ge; <code>StartDate</code>, and it becomes inactive when current date &ge; <code>EndDate</code>. An inactive Brand item is ignored: its products use the default values and SKU scope. The Default item is always active.</li>
                     <li><strong>No Brand:</strong> a product with no <code>xp.Brand</code> uses the default values and SKU scope.</li>
                     <li>Brand specific FTAD, RAD, MaxLimit can be optionally configured in sitecore.</li>
                     <li>MaxLimit is only meant for FTAD.</li>
