@@ -19,7 +19,7 @@
             <h1>Autoship Discount Configuration Simulator</h1>
             <p>
                 Edit the Default item and the Purina brand item (template AutoShip Discount Brand),
-                then see the resolved FTAD, RAD, Max Discount and FTAD Scope for a product. A Brand item applies only between its Start Date and End Date.
+                then see the resolved FTAD, RAD and Max Discount for a product. A Brand item applies only between its Start Date and End Date.
             </p>
         </div>
     </header>
@@ -75,7 +75,6 @@
                 </div>
 
                 <div id="appliedNotice" class="applied-notice"></div>
-                <div id="eligibilityNotice" class="eligibility-notice"></div>
 
                 <div class="results-container">
 
@@ -98,15 +97,6 @@
                                 <span class="result-note" id="noteMaxLimit"></span>
                             </div>
                             <span class="source-indicator" id="srcMaxLimit">N/A</span>
-                        </div>
-
-                        <div class="result-badge mt">
-                            <div>
-                                <span class="result-title">FTAD Scope</span>
-                                <span class="result-val" id="outFTADScope">-</span>
-                                <span class="result-note" id="noteFTADScope"></span>
-                            </div>
-                            <span class="source-indicator" id="srcFTADScope">N/A</span>
                         </div>
                     </div>
 
@@ -159,9 +149,8 @@
             <ul class="rules-list">
                     <li><strong>Guests:</strong> guests get no FTAD/RAD.</li>
                     <li><strong>FTAD, default:</strong> an eligible SKU gets FTAD once per user.</li>
-                    <li><strong>FTAD, Brand scope (<code>FTADScope = BRAND</code>):</strong> FTAD is once per user per Brand. Every eligible SKU of that Brand in the same order gets FTAD. After checkout, no SKU of that Brand gets FTAD again.</li>
-                    <li><strong>Active window:</strong> every Brand item has a mandatory <code>StartDate</code> (default 01-01-2026) and an optional <code>EndDate</code>. The Brand item applies only when current date &ge; <code>StartDate</code>, and it becomes inactive when current date &ge; <code>EndDate</code>. An inactive Brand item is ignored: its products use the default values and SKU scope. The Default item is always active.</li>
-                    <li><strong>No Brand:</strong> a product with no <code>xp.Brand</code> uses the default values and SKU scope.</li>
+                    <li><strong>Active window:</strong> every Brand item has a mandatory <code>StartDate</code> (default 01-01-2026) and an optional <code>EndDate</code>. The Brand item applies only when current date &ge; <code>StartDate</code>, and it becomes inactive when current date &ge; <code>EndDate</code>. An inactive Brand item is ignored: its products use the default values. The Default item is always active.</li>
+                    <li><strong>No Brand:</strong> a product with no <code>xp.Brand</code> uses the default values.</li>
                     <li>Brand specific FTAD, RAD, MaxLimit can be optionally configured in sitecore.</li>
                     <li>MaxLimit is only meant for FTAD.</li>
                     <li><strong>Fallback:</strong> FTAD %, RAD % and MaxLimit each fall back to the default on their own when the Brand value is empty in sitecore.</li>
